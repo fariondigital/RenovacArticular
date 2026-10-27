@@ -24,6 +24,10 @@ npm run deploy
 
 O Worker usa o nome `renovacarticular`. Para outro nome, altere `name` em `wrangler.jsonc`. O domínio personalizado pode ser configurado depois; o endereço `workers.dev` funciona para conferir a publicação.
 
+## Domínio e rotas públicas
+
+O Worker atende `www.sabedoriadocorpo.com`, configurado como domínio personalizado na Cloudflare. O funil começa em `/renovac`; a oferta usa `/renovac/oferta` e a política de privacidade, `/renovac/privacidade`. As rotas antigas na raiz continuam disponíveis no endereço `workers.dev`.
+
 ## Arquivos de mídia
 
 As referências das imagens e áudios são mantidas em `src/lib/source-assets.ts` e `src/lib/funnel-media.ts`; os arquivos correspondentes ficam em `public/media`. Para trocar uma mídia, atualize o arquivo local e a referência apropriada. As mídias específicas das versões masculina e feminina permanecem separadas.
