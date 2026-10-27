@@ -14,7 +14,7 @@ export const checkoutUrl = `https://checkout.payt.com.br/4fb65cf31f381637d0de7f4
 
 const GENDER_KEY = "renovarticular-gender";
 
-export function Funnel({ sales = false }: { sales?: boolean }) {
+export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; basePath?: "" | "/renovac" }) {
   const [step, setStep] = useState(sales ? 27 : 0);
   const [answers, setAnswers] = useState<Record<number, string[]>>({});
   const [progress, setProgress] = useState(0);
@@ -22,6 +22,9 @@ export function Funnel({ sales = false }: { sales?: boolean }) {
   const [checkoutHref, setCheckoutHref] = useState(checkoutUrl);
   const navigate = useNavigate();
   const current = content[step];
+  const homeRoute = basePath || "/";
+  const offerRoute = basePath ? "/renovac/oferta" : "/oferta";
+  const privacyRoute = basePath ? "/renovac/privacidade" : "/privacidade";
   useEffect(() => {
     const saved = window.sessionStorage.getItem(GENDER_KEY);
     if (saved) setGender(saved);
@@ -41,11 +44,11 @@ export function Funnel({ sales = false }: { sales?: boolean }) {
   if (!current) return null;
   const currentGender = answers[1]?.[0] ?? gender;
   const next = () => {
-    if (step === 26) { void navigate({ to: "/oferta" }); return; }
+    if (step === 26) { void navigate({ to: offerRoute }); return; }
     setStep((s) => Math.min(26, s + 1));
   };
   const back = () => {
-    if (sales) { void navigate({ to: "/" }); return; }
+    if (sales) { void navigate({ to: homeRoute }); return; }
     setStep((s) => Math.max(0, s - 1));
   };
   const options: HTMLReactParserOptions = {
@@ -100,7 +103,7 @@ export function Funnel({ sales = false }: { sales?: boolean }) {
     <div className="source-funnel" data-step={step}>
       {parse(current.html, options)}
       <p style={{ textAlign: "center", marginTop: 24, fontSize: 12, opacity: 0.6 }}>
-        <Link to="/privacidade" style={{ textDecoration: "underline", color: "inherit" }}>Política de Privacidade</Link>
+        <Link to={privacyRoute} style={{ textDecoration: "underline", color: "inherit" }}>Política de Privacidade</Link>
       </p>
     </div>
   );
