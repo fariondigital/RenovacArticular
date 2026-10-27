@@ -22,7 +22,7 @@ npm install
 npm run deploy
 ```
 
-O Worker usa o nome `protocolorenovac`. Para outro nome, altere `name` em `wrangler.jsonc`. O domínio personalizado pode ser configurado depois; o endereço `workers.dev` funciona para conferir a publicação.
+O Worker usa o nome `renovacarticular`. Para outro nome, altere `name` em `wrangler.jsonc`. O domínio personalizado pode ser configurado depois; o endereço `workers.dev` funciona para conferir a publicação.
 
 ## Arquivos de mídia
 
