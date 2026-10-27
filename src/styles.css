@@ -1,0 +1,440 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+@import "./source-funnel.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design system definition.
+ *
+ * The @theme inline block maps CSS custom properties to Tailwind utility
+ * classes (e.g. --color-primary -> bg-primary, text-primary).
+ *
+ * The :root and .dark blocks define the actual color values using oklch.
+ * All colors MUST use oklch format.
+ *
+ * To add a new semantic color:
+ * 1. Add the variable to :root (light value) and .dark (dark value)
+ * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.5rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0.005 285);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.129 0.042 264.695);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.129 0.042 264.695);
+  --primary: oklch(0.602 0.168 149);
+  --primary-foreground: oklch(0.984 0.003 247.858);
+  --secondary: oklch(0.968 0.007 247.896);
+  --secondary-foreground: oklch(0.208 0.042 265.755);
+  --muted: oklch(0.968 0.007 247.896);
+  --muted-foreground: oklch(0.55 0.025 264);
+  --accent: oklch(0.968 0.007 247.896);
+  --accent-foreground: oklch(0.208 0.042 265.755);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(0.929 0.013 255.508);
+  --input: oklch(0.929 0.013 255.508);
+  --ring: oklch(0.704 0.04 256.788);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.984 0.003 247.858);
+  --sidebar-foreground: oklch(0.129 0.042 264.695);
+  --sidebar-primary: oklch(0.208 0.042 265.755);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.968 0.007 247.896);
+  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
+  --sidebar-border: oklch(0.929 0.013 255.508);
+  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --action-shadow: oklch(0.545 0.166 149);
+  --option-hover: oklch(0.975 0.013 149);
+  --progress-track: oklch(0.94 0.005 265);
+  --warning: oklch(0.59 0.22 27);
+  --font-body: "Roboto", Arial, sans-serif;
+}
+
+.dark {
+  --background: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0.984 0.003 247.858);
+  --card: oklch(0.208 0.042 265.755);
+  --card-foreground: oklch(0.984 0.003 247.858);
+  --popover: oklch(0.208 0.042 265.755);
+  --popover-foreground: oklch(0.984 0.003 247.858);
+  --primary: oklch(0.929 0.013 255.508);
+  --primary-foreground: oklch(0.208 0.042 265.755);
+  --secondary: oklch(0.279 0.041 260.031);
+  --secondary-foreground: oklch(0.984 0.003 247.858);
+  --muted: oklch(0.279 0.041 260.031);
+  --muted-foreground: oklch(0.704 0.04 256.788);
+  --accent: oklch(0.279 0.041 260.031);
+  --accent-foreground: oklch(0.984 0.003 247.858);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.551 0.027 264.364);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.208 0.042 265.755);
+  --sidebar-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.279 0.041 260.031);
+  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.551 0.027 264.364);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    letter-spacing: 0;
+    margin: 0;
+  }
+}
+
+.funnel-page { min-height: 95svh; padding: 52px 20px 48px; }
+.funnel-column { width: 100%; max-width: 448px; margin-inline: auto; }
+.intro-title { font-size: 22px; font-weight: 900; line-height: 1.05; text-align: center; margin: 7px 4px 14px; }
+.intro-title mark { background: var(--foreground); color: var(--background); padding: 0 1px; }
+.intro-title .highlight, .text-highlight { color: var(--primary); }
+.intro-description { font-size: 16px; line-height: 22.5px; text-align: center; color: var(--muted-foreground); margin: 0 4px 26px; }
+.intro-image { width: calc(100% - 8px); margin-inline: 4px; height: auto; display: block; border-radius: 16px; }
+.funnel-action { width: 100%; min-height: 56px; height: auto; padding: 16px 20px; font-size: 16px; font-weight: 500; line-height: 24px; border-radius: 16px; color: var(--primary-foreground); background: var(--primary); box-shadow: 0 8px 0 var(--action-shadow); white-space: normal; transition: background .15s, transform .15s; }
+.funnel-action:hover { background: var(--action-shadow); }
+.funnel-action:active { transform: translateY(3px); }
+.intro-action { margin-top: 50px; }
+.quiz-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+.quiz-back { flex: 0 0 32px; color: var(--muted-foreground); }
+.quiz-progress { height: 8px; width: 100%; border-radius: 8px; background: var(--progress-track); accent-color: var(--primary); overflow: hidden; }
+.quiz-progress::-webkit-progress-bar { background: var(--progress-track); border-radius: 8px; }
+.quiz-progress::-webkit-progress-value { background: var(--primary); border-radius: 8px; transition: width .3s; }
+.quiz-progress::-moz-progress-bar { background: var(--primary); border-radius: 8px; }
+.quiz-title { font-size: 24px; line-height: 1.22; font-weight: 800; text-align: center; margin: 16px 0; }
+.quiz-description { text-align: center; font-size: 16px; color: var(--muted-foreground); line-height: 1.5; margin: 12px 0 24px; }
+.quiz-options { display: grid; gap: 12px; margin-top: 24px; }
+.quiz-option { width: 100%; height: auto; min-height: 64px; justify-content: flex-start; border: 1px solid var(--border); border-radius: 8px; background: var(--background); color: var(--foreground); white-space: normal; text-align: left; font-size: 18px; line-height: 1.35; padding: 16px; font-weight: 500; }
+.quiz-option:hover, .quiz-option[aria-pressed="true"] { border-color: var(--primary); background: var(--option-hover); color: var(--foreground); }
+.option-emoji { font-size: 27px; width: 34px; flex-shrink: 0; }
+.option-label { flex: 1; }
+.option-indicator { width: 22px; height: 22px; border: 1px solid var(--border); border-radius: 50%; display: grid; place-items: center; }
+.quiz-option[aria-pressed="true"] .option-indicator { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
+.step-image { width: 100%; height: auto; border-radius: 12px; margin: 16px 0; }
+.step-action { margin-top: 28px; }
+.step-copy { font-size: 18px; line-height: 1.5; text-align: center; }
+.step-copy p { margin: 16px 0; }
+.processing { text-align: center; padding-top: 80px; }
+.processing svg { margin: 24px auto; width: 48px; height: 48px; color: var(--primary); animation: spin 1s linear infinite; }
+.sale-column { width: 100%; max-width: 560px; margin: auto; text-align: center; }
+.sale-column h1 { font-size: 28px; font-weight: 900; line-height: 1.15; margin: 20px 0; }
+.sale-column h2 { font-size: 24px; line-height: 1.25; font-weight: 800; margin: 28px 0 16px; }
+.sale-column p { font-size: 17px; line-height: 1.5; margin: 16px 0; }
+.sale-column img { max-width: 100%; height: auto; margin: 16px auto; }
+.sale-section { padding-block: 16px; }
+.sale-price { font-size: 46px; font-weight: 900; color: var(--primary); }
+.sale-old-price { text-decoration: line-through; color: var(--muted-foreground); }
+.sale-faq { text-align: left; border-bottom: 1px solid var(--border); padding: 18px 0; }
+.sale-faq summary { cursor: pointer; font-weight: 700; }
+.sale-faq p { font-size: 15px; color: var(--muted-foreground); }
+.sale-footer { color: var(--muted-foreground); text-align: center; font-size: 12px; line-height: 1.5; margin-top: 40px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 600px) {
+  .funnel-page { padding: 28px 16px 40px; }
+  .intro-title { font-size: 22px; }
+  .quiz-title { font-size: 23px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+.source-funnel { font-family: "Inter", Arial, sans-serif; letter-spacing: 0; }
+.source-step { min-height: 95svh; padding: 20px; display: flex; flex-direction: column; gap: 24px; }
+.source-funnel .source-control { white-space: normal; letter-spacing: 0; cursor: pointer; transition: filter .15s; }
+.source-funnel .source-control:hover { filter: brightness(.97); }
+.source-funnel .source-control:disabled { opacity: .5; cursor: not-allowed; }
+.source-funnel .clone-selected { outline: 2px solid var(--primary); outline-offset: -2px; background-color: var(--option-hover); }
+.source-funnel .clone-audio { margin: 12px 0; width: 100%; }
+.source-funnel .clone-audio audio { display: block; width: 100%; }
+.source-funnel iframe { width: 100%; border: 0; }
+@media(max-width:600px) { .source-step { padding: 12px; gap: 16px; } }
+
+/* ============================================================
+   REDESIGN — Protocolo RenovArticular (camada visual)
+   Paleta medical/high-end: esmeralda + ardósia + gelo.
+   Somente aparência: nenhum texto ou estrutura foi alterado.
+   ============================================================ */
+:root {
+  --source-tone-0: oklch(0.92 0.004 286.3);
+  --source-tone-2: oklch(0.551 0.023 264.4);
+  --source-tone-3: oklch(0.21 0.006 285.9);
+  --source-tone-4: oklch(0.21 0.006 285.9);
+  --source-tone-6: oklch(0.696 0.149 162.5);
+  --source-tone-7: oklch(0.627 0.132 163.2);
+  --source-tone-8: oklch(0.696 0.149 162.5);
+  --source-tone-9: oklch(0.984 0.003 247.9);
+  --source-tone-11: oklch(0.627 0.132 163.2);
+  --source-tone-13: oklch(0.765 0.136 163);
+  --source-tone-15: oklch(0.696 0.149 162.5 / 0.1);
+  --source-tone-16: oklch(0.696 0.149 162.5 / 0.5);
+  --source-tone-17: oklch(0.637 0.237 25.3);
+  --source-tone-18: oklch(0.696 0.149 162.5);
+  --source-tone-19: oklch(0.627 0.132 163.2);
+  --source-tone-20: oklch(0.765 0.136 163);
+  --source-tone-23: oklch(0.765 0.136 163);
+  --source-tone-24: oklch(0.432 0.095 166.9);
+  --source-tone-25: oklch(0.442 0.017 285.8);
+  --source-tone-26: oklch(0.984 0.003 247.9);
+  --source-tone-27: oklch(0.705 0.015 286.1);
+  --source-tone-28: oklch(0.21 0.006 285.9 / 0.13);
+  --source-tone-29: oklch(0.92 0.004 286.3);
+  --source-tone-30: oklch(0.551 0.023 264.4);
+  --source-tone-31: oklch(0.746 0.078 250);
+  --source-tone-32: oklch(0.551 0.023 264.4);
+  --source-tone-33: oklch(0.984 0.003 247.9);
+  --source-tone-34: oklch(0.696 0.149 162.5);
+  --source-tone-35: oklch(0.627 0.132 163.2);
+  --source-tone-36: oklch(0.21 0.006 285.9);
+  --source-tone-37: oklch(0.696 0.149 162.5 / 0.04);
+  --source-tone-38: oklch(0.696 0.149 162.5);
+  --source-tone-39: oklch(0.627 0.132 163.2);
+  --source-tone-40: oklch(0.702 0.191 41.1);
+  --source-tone-41: oklch(0.984 0.003 247.9);
+  --source-tone-42: oklch(0.765 0.136 163);
+  --source-tone-43: oklch(0.627 0.132 163.2);
+  --source-tone-44: oklch(0.37 0.013 285.8);
+  --source-tone-45: oklch(0.696 0.149 162.5);
+  --source-tone-46: oklch(0.984 0.003 247.9);
+  --emerald: oklch(0.696 0.149 162.5);
+  --emerald-deep: oklch(0.627 0.132 163.2);
+  --emerald-ink: oklch(0.432 0.095 166.9);
+  --zinc-200: oklch(0.92 0.004 286.3);
+  --zinc-300: oklch(0.871 0.006 286.3);
+  --zinc-400: oklch(0.705 0.015 286.1);
+  --zinc-500: oklch(0.551 0.023 264.4);
+  --zinc-900: oklch(0.21 0.006 285.9);
+  --ice: oklch(0.984 0.003 247.9);
+}
+
+/* Tipografia e fundo */
+.source-funnel, .funnel-page {
+  font-family: "Plus Jakarta Sans", "Inter", Arial, sans-serif;
+  background: linear-gradient(180deg, var(--ice), #ffffff 60%);
+}
+.source-funnel h1, .source-funnel h2, .source-funnel h3 {
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+.source-funnel p { line-height: 1.65; }
+
+/* Botões principais (avançar / comprar) */
+.source-funnel .source-control[data-action="next"],
+.source-funnel .source-control[data-action="purchase"] {
+  background: linear-gradient(135deg, var(--emerald), var(--emerald-deep));
+  border: none;
+  border-radius: 16px;
+  color: #ffffff;
+  box-shadow: 0 12px 28px -10px oklch(0.627 0.132 163.2 / 0.55);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.source-funnel .source-control[data-action="next"]:hover,
+.source-funnel .source-control[data-action="purchase"]:hover {
+  filter: brightness(1.05);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px -10px oklch(0.627 0.132 163.2 / 0.6);
+}
+.source-funnel .source-control[data-action="next"]:active,
+.source-funnel .source-control[data-action="purchase"]:active {
+  transform: translateY(1px);
+}
+.source-funnel .source-control[data-action="next"] div,
+.source-funnel .source-control[data-action="next"] p,
+.source-funnel .source-control[data-action="next"] span,
+.source-funnel .source-control[data-action="purchase"] div,
+.source-funnel .source-control[data-action="purchase"] p,
+.source-funnel .source-control[data-action="purchase"] span {
+  background-color: transparent;
+}
+
+/* Cartões de opção do quiz */
+.source-funnel .source-control[data-action="toggle"] {
+  background: #ffffff;
+  border: 1px solid var(--zinc-200);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px oklch(0.21 0.006 285.9 / 0.06);
+  transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.source-funnel .source-control[data-action="toggle"]:hover {
+  border-color: var(--emerald);
+  box-shadow: 0 8px 20px -8px oklch(0.21 0.006 285.9 / 0.15);
+  transform: translateY(-1px);
+}
+.source-funnel .source-control[data-action="toggle"][aria-pressed="true"] {
+  border-color: var(--emerald);
+  background: oklch(0.696 0.149 162.5 / 0.08);
+  box-shadow: 0 0 0 1px var(--emerald), 0 8px 20px -8px oklch(0.627 0.132 163.2 / 0.35);
+}
+.source-funnel .source-control[data-action="toggle"].clone-selected {
+  outline: none;
+}
+
+/* Player de áudio estilo WhatsApp */
+.source-funnel .clone-audio {
+  margin: 16px 0;
+}
+.wa-player {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid var(--zinc-200);
+  border-radius: 18px;
+  box-shadow: 0 4px 14px -6px oklch(0.21 0.006 285.9 / 0.12);
+}
+.wa-play {
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--emerald), var(--emerald-deep));
+  box-shadow: 0 6px 14px -4px oklch(0.627 0.132 163.2 / 0.5);
+  cursor: pointer;
+  transition: transform .15s ease, filter .15s ease;
+}
+.wa-play:hover { filter: brightness(1.06); transform: scale(1.05); }
+.wa-body { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.wa-bars { display: flex; align-items: center; gap: 3px; height: 34px; }
+.wa-bars span {
+  flex: 1;
+  min-width: 2px;
+  border-radius: 2px;
+  background: var(--zinc-300);
+  transition: background .2s ease;
+}
+.wa-bars span.on { background: var(--emerald); }
+.wa-meta { display: flex; justify-content: flex-end; font-size: 12px; font-weight: 600; color: var(--zinc-500); }
+.wa-audio { display: none; }
+
+/* Vídeos e imagens: cards flutuantes */
+.source-funnel iframe {
+  border-radius: 20px;
+  box-shadow: 0 18px 40px -16px oklch(0.21 0.006 285.9 / 0.3);
+}
+.source-funnel .source-step img {
+  border-radius: 14px;
+}
+
+/* Selo "Protocolo Gerado com SUCESSO!" como pílula flutuante */
+.source-funnel .clone-859 {
+  display: flex;
+  justify-content: center;
+}
+.source-funnel .clone-860 {
+  display: inline-block;
+  width: auto;
+  padding: 10px 22px;
+  background: oklch(0.696 0.149 162.5 / 0.1);
+  border: 1px solid oklch(0.696 0.149 162.5 / 0.35);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px -10px oklch(0.627 0.132 163.2 / 0.4);
+  backdrop-filter: blur(6px);
+}
+.source-funnel .clone-860 p { margin: 0; }
+.source-funnel .clone-235 { text-decoration: none; color: var(--emerald-ink); }
+
+/* Bloco de preço (Pricing Box) */
+.source-funnel .clone-1020 {
+  height: auto;
+  min-height: 0;
+  background: #ffffff;
+  border: 1px solid oklch(0.696 0.149 162.5 / 0.3);
+  border-radius: 24px;
+  box-shadow: 0 24px 50px -20px oklch(0.627 0.132 163.2 / 0.35);
+  padding: 28px 20px;
+}
+.source-funnel .clone-1021 { color: var(--zinc-400); font-weight: 600; }
+.source-funnel .clone-1022 { height: auto; min-height: 0; margin: 4px 0 0; }
+.source-funnel .clone-1023 {
+  font-size: 52px;
+  line-height: 1.15;
+  background: linear-gradient(135deg, var(--emerald), var(--emerald-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* CTA com pulsação suave na página de vendas */
+@keyframes cta-pulse {
+  0%, 100% { box-shadow: 0 12px 28px -10px oklch(0.627 0.132 163.2 / 0.55); }
+  50% { box-shadow: 0 12px 42px -6px oklch(0.627 0.132 163.2 / 0.8); }
+}
+.source-funnel[data-step="27"] .source-control[data-action="purchase"] {
+  animation: cta-pulse 2.2s ease-in-out infinite;
+}
+
+/* Garantia 180 dias */
+.source-funnel .clone-1045 { color: var(--emerald-ink); }
