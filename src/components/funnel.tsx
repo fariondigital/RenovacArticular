@@ -115,4 +115,3 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
     </div>
   );
 }
-
