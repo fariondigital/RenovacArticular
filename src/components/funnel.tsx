@@ -7,7 +7,7 @@ import { sourceAssets } from "@/lib/source-assets";
 import content from "@/lib/funnel-content.json";
 import { funnelImage, funnelVideo } from "@/lib/funnel-media";
 export { maleSuccessVideo } from "@/lib/funnel-media";
-import { PIXEL_ID } from "@/lib/meta-pixel";
+import { PIXEL_ID, trackFunnelLandingViewed, trackOfferPageReached, trackQuizAudioCompleted, trackQuizAudioStarted, trackQuizCheckoutClick, trackQuizStarted, trackQuizStep, trackQuizVideoPageReached } from "@/lib/meta-pixel";
 import { captureTrackingParams, readTrackingParams, withTrackingParams } from "@/lib/tracking-params";
 
 export const checkoutUrl = `https://checkout.payt.com.br/4fb65cf31f381637d0de7f4029c97fea?pixelfb=${PIXEL_ID}`;
@@ -36,6 +36,12 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
     setProgress(0);
   }, [step]);
   useEffect(() => {
+    trackQuizStep(step);
+    if (step === 0) trackFunnelLandingViewed();
+    if (sales) trackOfferPageReached();
+    if (current?.html.includes("<iframe")) trackQuizVideoPageReached(step);
+  }, [step, current?.html, sales]);
+  useEffect(() => {
     if (step !== 25) return;
     const interval = window.setInterval(() => setProgress((p) => Math.min(p + 5, 100)), 150);
     const timer = window.setTimeout(() => setStep(26), 3300);
@@ -62,7 +68,7 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
       }
       if (node.attribs["data-audio"]) {
         const audioSrc = sourceAssets[node.attribs["data-audio"]];
-        return <div className="clone-audio">{audioSrc ? <AudioPlayer src={audioSrc} /> : null}</div>;
+        return <div className="clone-audio">{audioSrc ? <AudioPlayer src={audioSrc} onPlay={() => trackQuizAudioStarted(step)} onComplete={() => trackQuizAudioCompleted(step)} /> : null}</div>;
       }
       if (node.name === "iframe") {
         const src = funnelVideo(step, node.attribs["data-clone-node"] || "", currentGender, node.attribs["src"] || "");
@@ -76,11 +82,12 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
         const answer = node.attribs["data-answer"] || "";
         const selected = answers[step]?.includes(answer) || false;
         if (action === "purchase") {
-          return <Button variant="source" asChild className={node.attribs["class"]}><a href={checkoutHref} rel="noopener noreferrer">{children()}</a></Button>;
+          return <Button variant="source" asChild className={node.attribs["class"]}><a href={checkoutHref} rel="noopener noreferrer" onClick={trackQuizCheckoutClick}>{children()}</a></Button>;
         }
         if (action === "expand") return <div className={node.attribs["class"]}>{children()}</div>;
         return <Button variant="source" type="button" data-action={action} className={`${node.attribs["class"]} ${selected ? "clone-selected" : ""}`} aria-label={action === "back" ? "Voltar" : undefined} aria-pressed={action === "toggle" ? selected : undefined} disabled={action === "next" && current.multiple && !(answers[step]?.length)} onClick={() => {
           if (action === "back") { back(); return; }
+          if (action === "next" && step === 0) trackQuizStarted();
           if (action === "toggle") {
             setAnswers((old) => ({ ...old, [step]: selected ? (old[step] || []).filter((a) => a !== answer) : [...(old[step] || []), answer] }));
             return;
@@ -108,3 +115,4 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
     </div>
   );
 }
+
