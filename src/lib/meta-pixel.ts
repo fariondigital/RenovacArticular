@@ -46,6 +46,76 @@ async function visitorRegion(): Promise<string | null> {
 }
 
 let ready = false;
+const pendingQuizEvents: string[] = [];
+const trackedQuizEvents = new Set<string>();
+const QUIZ_EVENTS_SESSION_KEY = "renovarticular-quiz-v1-events";
+
+function trackQuizEventOnce(key: string, eventName: string): void {
+  let stored: string[] = [];
+  try {
+    const parsed: unknown = JSON.parse(window.sessionStorage.getItem(QUIZ_EVENTS_SESSION_KEY) || "[]");
+    if (Array.isArray(parsed)) stored = parsed.filter((value): value is string => typeof value === "string");
+  } catch {
+    // Fall back to the in-memory set when session storage is unavailable.
+  }
+
+  if (stored.includes(key) || trackedQuizEvents.has(key)) return;
+  trackedQuizEvents.add(key);
+  try {
+    window.sessionStorage.setItem(QUIZ_EVENTS_SESSION_KEY, JSON.stringify([...stored, key]));
+  } catch {
+    // The in-memory set still prevents repeats during this page session.
+  }
+
+  if (!ready) {
+    pendingQuizEvents.push(eventName);
+    return;
+  }
+  dispatch(["trackCustom", eventName]);
+}
+
+export function trackFunnelLandingViewed(): void {
+  trackQuizEventOnce("landing-viewed", "FunnelLandingViewed");
+}
+
+export function trackQuizStarted(): void {
+  trackQuizEventOnce("started", "QuizV1Started");
+}
+
+export function trackQuizStep(step: number): void {
+  if (!Number.isInteger(step) || step < 1 || step > 27) return;
+  trackQuizEventOnce(`step-${step}`, `QuizV1Step${String(step).padStart(2, "0")}Reached`);
+}
+
+export function trackQuizAudioStarted(step: number): void {
+  if (!Number.isInteger(step) || step < 1 || step > 27) return;
+  trackQuizEventOnce(`audio-started-${step}`, `QuizV1Step${String(step).padStart(2, "0")}AudioStarted`);
+}
+
+export function trackQuizAudioCompleted(step: number): void {
+  if (!Number.isInteger(step) || step < 1 || step > 27) return;
+  trackQuizEventOnce(`audio-completed-${step}`, `QuizV1Step${String(step).padStart(2, "0")}AudioCompleted`);
+}
+
+export function trackQuizVideoPageReached(step: number): void {
+  if (!Number.isInteger(step) || step < 1 || step > 27) return;
+  trackQuizEventOnce(`video-page-${step}`, `QuizV1Step${String(step).padStart(2, "0")}VideoPageReached`);
+}
+
+export function trackOfferPageReached(): void {
+  trackQuizEventOnce("offer-page", "QuizV1OfferPageReached");
+}
+
+export function trackQuizCheckoutClick(): void {
+  trackQuizEventOnce("checkout-click", "QuizV1CheckoutClick");
+}
+
+function flushPendingQuizEvents(): void {
+  while (pendingQuizEvents.length > 0) {
+    const eventName = pendingQuizEvents.shift();
+    if (eventName) dispatch(["trackCustom", eventName]);
+  }
+}
 
 export async function initMetaPixel(): Promise<void> {
   if (window.fbq || ready) return;
@@ -72,6 +142,7 @@ export async function initMetaPixel(): Promise<void> {
   dispatch(["init", PIXEL_ID, {}, { agent: "renovac" }]);
   ready = true;
   trackPageView();
+  flushPendingQuizEvents();
 }
 
 export function trackPageView(): void {
