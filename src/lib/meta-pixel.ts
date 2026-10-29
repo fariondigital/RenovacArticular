@@ -149,4 +149,3 @@ export function trackPageView(): void {
   if (!ready) return;
   dispatch(["track", "PageView"]);
 }
-
