@@ -10,7 +10,7 @@ function formatTime(seconds: number) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-export function AudioPlayer({ src }: { src?: string }) {
+export function AudioPlayer({ src, onPlay, onComplete }: { src?: string; onPlay?: () => void; onComplete?: () => void }) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -25,16 +25,19 @@ export function AudioPlayer({ src }: { src?: string }) {
       if (audio.duration) setProgress(audio.currentTime / audio.duration);
     };
     const onMeta = () => setDuration(audio.duration);
-    const onEnd = () => setPlaying(false);
+    const onAudioPlay = () => { setPlaying(true); onPlay?.(); };
+    const onEnd = () => { setPlaying(false); onComplete?.(); };
     audio.addEventListener("timeupdate", onTime);
     audio.addEventListener("loadedmetadata", onMeta);
+    audio.addEventListener("play", onAudioPlay);
     audio.addEventListener("ended", onEnd);
     return () => {
       audio.removeEventListener("timeupdate", onTime);
       audio.removeEventListener("loadedmetadata", onMeta);
+      audio.removeEventListener("play", onAudioPlay);
       audio.removeEventListener("ended", onEnd);
     };
-  }, []);
+  }, [onPlay, onComplete]);
 
   const toggle = () => {
     const audio = audioRef.current;
@@ -43,8 +46,7 @@ export function AudioPlayer({ src }: { src?: string }) {
       audio.pause();
       setPlaying(false);
     } else {
-      void audio.play();
-      setPlaying(true);
+      void audio.play().catch(() => setPlaying(false));
     }
   };
 
@@ -72,3 +74,4 @@ export function AudioPlayer({ src }: { src?: string }) {
     </div>
   );
 }
+
