@@ -74,4 +74,3 @@ export function AudioPlayer({ src, onPlay, onComplete }: { src?: string; onPlay?
     </div>
   );
 }
-
