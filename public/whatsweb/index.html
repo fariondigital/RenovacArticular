@@ -1,0 +1,899 @@
+Warning: d was declared with const; use let for reassignable variables.
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dr. Rodrigo | Atendimento Articular</title>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1671048727876935');
+fbq('track', 'PageView');
+fbq('trackCustom', 'V2_PageView');
+</script>
+<!-- End Meta Pixel Code -->
+<style>
+:root {
+  --green:#16a34a;
+  --dark:#075e54;
+  --chat:#e5ddd5;
+  --text:#202c33;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:#d9e1df;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--text);
+}
+.app {
+  max-width:520px;
+  min-height:100dvh;
+  margin:auto;
+  background:var(--chat);
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 0 25px #0002;
+}
+.header {
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:var(--dark);
+  color:white;
+  padding:12px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+.avatar,.audio-avatar {
+  border-radius:50%;
+  object-fit:cover;
+  object-position:center 23%;
+  flex-shrink:0;
+  background:#d8e8e2;
+}
+.avatar {width:49px;height:49px}
+.audio-avatar {
+  width:43px;
+  height:43px;
+  border:2px solid #e2e8f0;
+}
+.name {font-size:14px;font-weight:bold}
+.status {
+  color:#d7f4e6;
+  font-size:12px;
+  margin-top:4px;
+}
+.online {
+  display:inline-block;
+  width:7px;height:7px;
+  background:#4ade80;
+  border-radius:50%;
+  margin-right:5px;
+}
+.chat {padding:15px 12px 25px;flex:1}
+.day {
+  width:max-content;
+  margin:4px auto 20px;
+  background:#d5e4eb;
+  padding:6px 13px;
+  border-radius:7px;
+  color:#52616b;
+  font-size:11px;
+}
+.bubble {
+  max-width:93%;
+  background:white;
+  padding:13px;
+  border-radius:12px;
+  margin-bottom:13px;
+  line-height:1.55;
+  font-size:14px;
+  box-shadow:0 1px 2px #0001;
+}
+.reply {
+  margin-left:auto;
+  width:fit-content;
+  max-width:85%;
+  background:#dcf8c6;
+}
+.time {
+  text-align:right;
+  color:#8696a0;
+  font-size:10px;
+  margin-top:5px;
+}
+.forwarded {
+  font-size: 11px;
+  color: #64748b;
+  font-style: italic;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.audio {
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+.audio button {
+  border:0;
+  background:var(--dark);
+  color:white;
+  width:38px;height:38px;
+  border-radius:50%;
+  cursor:pointer;
+  flex-shrink:0;
+}
+.audio-body {flex:1;min-width:0}
+.audio-line {
+  height:5px;
+  background:#d1d5db;
+  border-radius:5px;
+  margin-bottom:7px;
+  overflow:hidden;
+}
+.audio-fill {
+  width:0%;
+  height:100%;
+  background:var(--green);
+}
+.small {font-size:11px;color:#64748b}
+.progress-label {
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  font-weight:bold;
+  color:#475569;
+  margin:18px 0 8px;
+}
+.progress-track {
+  height:7px;
+  background:#cbd5e1;
+  border-radius:10px;
+  overflow:hidden;
+  margin-bottom:20px;
+}
+.progress-fill {
+  height:100%;
+  background:var(--green);
+  transition:width .25s;
+}
+.option {
+  width:100%;
+  padding:16px 15px;
+  margin-bottom:9px;
+  border:1px solid #15803d;
+  border-radius:11px;
+  background:var(--green);
+  color:white;
+  font-size:14px;
+  font-weight:bold;
+  text-align:left;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  cursor:pointer;
+  box-shadow:0 3px 0 #10752f;
+  transition:background .15s,transform .15s;
+}
+.option:hover {background:#15803d}
+.option:active {transform:scale(.985)}
+.option span:last-child {font-size:20px}
+.footer {
+  position:sticky;
+  bottom:0;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:11px 14px;
+  background:#f0f2f5;
+  color:#8696a0;
+}
+.input-fake {
+  flex:1;
+  background:white;
+  padding:13px;
+  border-radius:30px;
+  font-size:13px;
+}
+.analysis {
+  background:white;
+  padding:35px 20px;
+  border-radius:15px;
+  text-align:center;
+  margin-top:35px;
+}
+.analysis h2 {color:var(--dark);font-size:21px}
+.analysis p {color:#64748b;font-size:13px}
+.analysis-track {
+  height:13px;
+  background:#d1fae5;
+  border-radius:20px;
+  overflow:hidden;
+  margin:25px 0 12px;
+}
+.analysis-fill {
+  width:0;
+  height:100%;
+  background:linear-gradient(90deg,#22c55e,#15803d);
+  border-radius:20px;
+}
+.percent {color:#15803d;font-weight:bold}
+.result {
+  background:#fff5f3;
+  border:2px solid #dc2626;
+  border-radius:14px;
+  padding:17px;
+  margin:15px 0;
+}
+.result h2 {
+  color:#991b1b;
+  font-size:19px;
+  text-align:center;
+  margin:0 0 20px;
+}
+.gauge {
+  position:relative;
+  padding-top:25px;
+  margin-bottom:16px;
+}
+.gauge-bar {
+  height:26px;
+  border-radius:7px;
+  background:linear-gradient(
+    90deg,
+    #16a34a 0%,
+    #a3d33d 25%,
+    #facc15 48%,
+    #f97316 70%,
+    #ef4444 85%,
+    #7f1d1d 100%
+  );
+}
+.gauge-pointer {
+  position:absolute;
+  right:5%;
+  top:0;
+  color:#7f1d1d;
+  font-size:24px;
+}
+.gauge-labels {
+  display:flex;
+  justify-content:space-between;
+  margin-top:9px;
+  font-size:11px;
+  font-weight:bold;
+  color:#475569;
+}
+.risk-label {
+  background:#991b1b;
+  color:white;
+  text-align:center;
+  font-size:14px;
+  font-weight:bold;
+  padding:13px;
+  border-radius:9px;
+}
+.result p {
+  color:#7f1d1d;
+  font-size:13px;
+  line-height:1.6;
+}
+.reportagem-img {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.video-wrap {
+  background:white;
+  border-radius:12px;
+  padding:9px;
+  margin-bottom:14px;
+}
+.video-wrap iframe {
+  display:block;
+  width:100%;
+  aspect-ratio:9/12;
+  border:0;
+  border-radius:8px;
+  background:#101820;
+}
+.offer {
+  background:white;
+  padding:16px;
+  border-radius:13px;
+  text-align:center;
+  margin-bottom:14px;
+}
+.price-box {
+  background: #f0fdf4;
+  border: 2px dashed #16a34a;
+  border-radius: 10px;
+  padding: 12px;
+  margin: 15px 0;
+}
+.old-price {
+  color: #dc2626;
+  text-decoration: line-through;
+  font-size: 16px;
+  font-weight: bold;
+}
+.new-price {
+  color: #16a34a;
+  font-size: 34px;
+  font-weight: bold;
+}
+
+@keyframes pulseButton {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
+  70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(22, 163, 74, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+}
+
+.checkout {
+  width:100%;
+  padding:18px 10px;
+  border:0;
+  border-radius:10px;
+  background:var(--green);
+  color:white;
+  font-size:15px;
+  font-weight:bold;
+  line-height:1.5;
+  cursor:pointer;
+  margin-bottom:12px;
+  animation: pulseButton 2s infinite;
+}
+.restart {
+  margin:18px 0;
+  padding:12px;
+  width:100%;
+  background:white;
+  border:1px solid #cbd5e1;
+  border-radius:9px;
+  cursor:pointer;
+}
+
+/* Carrossel Facebook com Erros Ortográficos / Linguagem Nativa */
+.fb-carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 12px;
+  padding: 5px 2px 15px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  margin-bottom: 14px;
+}
+.fb-card {
+  min-width: 250px;
+  max-width: 250px;
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  scroll-snap-align: start;
+  font-size: 12px;
+  border: 1px solid #e4e6eb;
+  text-align: left;
+}
+.fb-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.fb-user-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.fb-user-name {
+  font-weight: bold;
+  color: #050505;
+  font-size: 13px;
+}
+.fb-stars {
+  color: #f59e0b;
+  font-size: 11px;
+  margin-top: 1px;
+}
+.fb-text {
+  color: #4b4f56;
+  line-height: 1.4;
+}
+.fb-user-location { color:#65676b; font-size:11px; margin-top:2px; }
+.fb-video-embed { width:100%; aspect-ratio:9/16; overflow:hidden; margin:8px 0; border-radius:7px; background:#111827; }
+.fb-video-embed iframe { display:block; width:100%; height:100%; border:0; }
+
+@media(max-width:520px) {
+  .app {box-shadow:none}
+}
+</style>
+</head>
+<body>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1671048727876935&ev=PageView&noscript=1"/></noscript>
+
+<div class="app">
+  <header class="header">
+    <span aria-hidden="true">‹</span>
+    <img class="avatar" src="rodrigo.webp" alt="Foto do Dr. Rodrigo">
+    <div>
+      <div class="name">✅ Dr. Rodrigo Padovani (Especialista em Articulações)</div>
+      <div class="status">
+        <span class="online"></span>
+        Online
+      </div>
+    </div>
+  </header>
+
+  <main class="chat" id="chat"></main>
+
+  <footer class="footer">
+    <span>☺</span>
+    <div class="input-fake">Mensagem</div>
+    <span>🎙</span>
+  </footer>
+</div>
+
+<script>
+const chat = document.getElementById("chat");
+
+function trackMetaCustomEvent(eventName) {
+  if (typeof window.fbq === "function") window.fbq("trackCustom", eventName);
+}
+
+document.addEventListener("click", (event) => {
+  const target = event.target;
+  const button = target instanceof Element ? target.closest("[data-meta-event]") : null;
+  if (!button) return;
+  trackMetaCustomEvent(button.dataset.metaEvent);
+  const checkoutUrl = button.dataset.checkoutUrl;
+  if (checkoutUrl) {
+    event.preventDefault();
+    window.setTimeout(() => window.location.assign(checkoutUrl), 250);
+  }
+});
+
+const questions = [
+  {
+    q:"Primeira pergunta: Em qual parte do seu corpo você sente mais dor, rigidez ou dificuldade para se movimentar?",
+    opts:[
+      "🦵 Joelhos",
+      "🦴 Quadril / Bacia",
+      "🧍 Coluna / Lombar",
+      "💪 Ombros",
+      "🖐️ Mãos / Dedos / Punhos",
+      "🦶 Tornozelos / Pés",
+      "😣 Em várias articulações"
+    ]
+  },
+  {
+    q:"Entendi. E como essa dor ou rigidez mais atrapalha sua rotina?",
+    opts:[
+      "😣 Dói ao levantar ou sentar",
+      "🚶 Dificulta caminhar ou subir escadas",
+      "🌙 Piora à noite e atrapalha meu sono",
+      "✋ Dificulta pegar objetos ou movimentar os braços",
+      "⚠️ Sinto rigidez, estalos ou travamentos"
+    ]
+  },
+  {
+    q:"Há quanto tempo você sente que essa dor está afetando seus movimentos e sua qualidade de vida?",
+    opts:[
+      "Menos de 1 ano",
+      "De 1 a 3 anos (já evito sair)",
+      "Mais de 3 anos / Uso bengala ou apoio"
+    ]
+  },
+  {
+    q:"Quando a dor aparece, qual dessas situações mais se parece com o que você sente?",
+    opts:[
+      "Dor leve, mas frequente",
+      "Dor moderada que limita algumas atividades",
+      "Dor forte que dificulta minha rotina",
+      "Dor muito intensa, mesmo em repouso"
+    ]
+  },
+  {
+    q:"Última pergunta: Você já sofreu com queimação, azia ou dores no estômago por causa de anti-inflamatórios ou remédios de farmácia?",
+    opts:[
+      "Sim, meu estômago não aguenta mais",
+      "Não tomo com frequência"
+    ]
+  }
+];
+
+let step = 0;
+let answers = [];
+let analysisTimer = null;
+
+function bubble(text,extra="") {
+  const div=document.createElement("div");
+  div.className="bubble "+extra;
+
+  const content=document.createElement("div");
+  content.textContent=text;
+
+  div.appendChild(content);
+  chat.appendChild(div);
+  return div;
+}
+
+function scrollDown() {
+  window.scrollTo({
+    top:document.documentElement.scrollHeight,
+    behavior:"smooth"
+  });
+}
+
+function createAudio(filename,label,customAvatar="rodrigo.webp",isForwarded=false,eventName="") {
+  const box=document.createElement("div");
+  box.className="bubble";
+
+  box.innerHTML=`
+    ${isForwarded ? `<div class="forwarded">↪ Encaminhada</div>` : ""}
+    <div class="audio">
+      <img src="${customAvatar}" class="audio-avatar" alt="Foto">
+      <button type="button" aria-label="Reproduzir áudio">▶</button>
+      <div class="audio-body">
+        <div class="audio-line">
+          <div class="audio-fill"></div>
+        </div>
+        <div class="small">${label}</div>
+      </div>
+    </div>
+  `;
+
+  const audio=document.createElement("audio");
+  audio.src=filename;
+  audio.preload="metadata";
+  box.appendChild(audio);
+
+  const button=box.querySelector("button");
+  const fill=box.querySelector(".audio-fill");
+
+  button.onclick=async()=>{
+    if(audio.paused) {
+      document.querySelectorAll("audio").forEach(other=>{
+        if(other!==audio) other.pause();
+      });
+      try {
+        await audio.play();
+      } catch(e) {
+        alert("Arquivo de áudio não encontrado: "+filename);
+      }
+    } else {
+      audio.pause();
+    }
+  };
+
+  let playEventSent = false;
+  audio.onplay=()=>{
+    button.textContent="Ⅱ";
+    if(eventName && !playEventSent) {
+      trackMetaCustomEvent(eventName);
+      playEventSent = true;
+    }
+  };
+  audio.onpause=()=>button.textContent="▶";
+  audio.ontimeupdate=()=>{
+    if(Number.isFinite(audio.duration)&&audio.duration>0) {
+      fill.style.width=(audio.currentTime/audio.duration*100)+"%";
+    }
+  };
+  audio.onended=()=>{
+    button.textContent="▶";
+    fill.style.width="0%";
+  };
+
+  chat.appendChild(box);
+  return box;
+}
+
+function start() {
+  clearInterval(analysisTimer);
+  step=0;
+  answers=[];
+  chat.innerHTML='<div class="day">HOJE</div>';
+
+  bubble(
+    "Olá! Vi que você clicou no nosso alerta sobre o desgaste nas articulações. Sinto muito pelas noites em claro e pela dificuldade para se levantar..."
+  );
+
+  bubble(
+    "Infelizmente, a medicina tradicional só quer te entupir de remédios que destroem seu estômago e nunca curam o problema real."
+  );
+
+  createAudio(
+    "rodrigo-audio.mp3",
+    "Áudio • Dr. Rodrigo",
+    "rodrigo.webp",
+    false,
+    "V2_PlayAudio1"
+  );
+
+  showQuestion();
+}
+
+function showQuestion() {
+  document.getElementById("currentOptions")?.remove();
+  document.getElementById("quizProgress")?.remove();
+
+  const progress=document.createElement("div");
+  progress.id="quizProgress";
+  progress.innerHTML=`
+    <div class="progress-label">
+      <span>QUESTIONÁRIO ARTICULAR</span>
+      <span>${step+1} de ${questions.length}</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" style="width:${(step+1)/questions.length*100}%"></div>
+    </div>
+  `;
+  chat.appendChild(progress);
+
+  bubble(questions[step].q);
+
+  const options=document.createElement("div");
+  options.id="currentOptions";
+
+  questions[step].opts.forEach(option=>{
+    const btn=document.createElement("button");
+    btn.className="option";
+
+    const label=document.createElement("span");
+    label.textContent=option;
+
+    const arrow=document.createElement("span");
+    arrow.textContent="›";
+
+    btn.append(label,arrow);
+    btn.onclick=()=>selectAnswer(option);
+    options.appendChild(btn);
+  });
+
+  chat.appendChild(options);
+  scrollDown();
+}
+
+function selectAnswer(value) {
+  trackMetaCustomEvent("V2_Quiz" + (step + 1));
+  answers.push(value);
+  document.getElementById("currentOptions")?.remove();
+
+  bubble(value+" ✓✓","reply");
+  step++;
+
+  if(step<questions.length) {
+    showQuestion();
+  } else {
+    startAnalysis();
+  }
+}
+
+function startAnalysis() {
+  document.querySelectorAll("audio").forEach(a=>a.pause());
+
+  chat.innerHTML=`
+    <div class="day">HOJE</div>
+    <div class="analysis">
+      <div style="font-size:34px;color:#16a34a">◉</div>
+      <h2>Analisando seu caso...</h2>
+      <p>Organizando suas respostas para apresentar o próximo passo.</p>
+      <div class="analysis-track">
+        <div class="analysis-fill" id="analysisFill"></div>
+      </div>
+      <div class="percent" id="analysisPercent">0%</div>
+    </div>
+  `;
+
+  window.scrollTo({top:0,behavior:"smooth"});
+
+  const fill=document.getElementById("analysisFill");
+  const percent=document.getElementById("analysisPercent");
+  const duration=3000;
+  const started=performance.now();
+
+  function update(now) {
+    const elapsed=now-started;
+    const progress=Math.min(100,Math.floor(elapsed/duration*100));
+
+    fill.style.width=progress+"%";
+    percent.textContent=progress+"%";
+
+    if(progress<100) {
+      analysisTimer=requestAnimationFrame(update);
+    } else {
+      analysisTimer=setTimeout(showResult,200);
+    }
+  }
+
+  analysisTimer=requestAnimationFrame(update);
+}
+
+function showResult() {
+  trackMetaCustomEvent("V2_PaginaCTA");
+  chat.innerHTML='<div class="day">HOJE</div>';
+
+  bubble(
+    "Análise concluída. Veja o resultado com base nas suas respostas:"
+  );
+
+  // 1. QUADRO DE DIAGNÓSTICO EM VERMELHO
+  const result=document.createElement("div");
+  result.className="result";
+  result.innerHTML=`
+    <h2>⚠️ GRAU DE DESGASTE</h2>
+    <div class="gauge">
+      <div class="gauge-pointer">▼</div>
+      <div class="gauge-bar"></div>
+      <div class="gauge-labels">
+        <span>BAIXO</span>
+        <span>MODERADO</span>
+        <span>ALTO</span>
+      </div>
+    </div>
+    <div class="risk-label">⚠ ALTO RISCO DE LIMITAÇÃO</div>
+    <p>
+      O seu líquido sinovial está criticamente reduzido.
+      Continuar mascarando essa dor com analgésicos comuns vai apenas
+      acelerar o desgaste da cartilagem. O seu organismo ainda tem
+      capacidade de absorção rápida de ativos naturais, mas é preciso
+      agir antes que a perda de mobilidade se torne irreversível.
+    </p>
+  `;
+  chat.appendChild(result);
+
+  // 2. IMAGEM DA REPORTAGEM (REPORTAGEM.PNG)
+  const reportImg = document.createElement("img");
+  reportImg.src = "Reportagem.webp";
+  reportImg.className = "reportagem-img";
+  reportImg.alt = "Reportagem Especial";
+  chat.appendChild(reportImg);
+
+  // 3. ÁUDIO DO DR. RODRIGO APRESENTANDO A DONA SUELI
+  createAudio(
+    "rosas.mp3",
+    "Áudio • Dr. Rodrigo",
+    "rodrigo.webp",
+    false,
+    "V2_AudioCTA1"
+  );
+
+  // 4. VÍDEO DO YOUTUBE CORRIGIDO COM EMBED CORRETO
+  const video=document.createElement("div");
+  video.className="video-wrap";
+  video.innerHTML=`
+    <iframe
+      src="https://www.youtube.com/embed/zHXqFyAQCCg"
+      title="Depoimento da Dona Sueli"
+      loading="lazy"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen>
+    </iframe>
+  `;
+  chat.appendChild(video);
+
+  // 5. ÁUDIO DO DR. RODRIGO (OFERTA + GANCHO PARA A MÃE)
+  createAudio(
+    "rodrigo-oferta.mp3",
+    "Áudio • Dr. Rodrigo",
+    "rodrigo.webp",
+    false,
+    "V2_AudioCTA2"
+  );
+
+  // 6. ÁUDIO DA VOVÓ COM A FOTO MAERODRIGO.JPG E TAG ENCAMINHADA
+  createAudio(
+    "ElevenLabs_2026-11-01T19_28_45_MÃE RODRIGO_gen_sp100_s50_sb75_v4.mp3",
+    "Áudio • Mamãe❤️",
+    "maerodrigo.webp",
+    true,
+    "V2_AudioCTAfinal"
+  );
+
+  // 7. BOTÃO CTA 1 (PULSANTE)
+  const btn1 = document.createElement("div");
+  btn1.innerHTML = `
+    <button class="checkout" data-meta-event="V2_BotaoCheckout1" data-checkout-url="https://payt.site/WOC6dVK">
+      ACESSAR MEU PROTOCOLO AGORA →
+    </button>
+  `;
+  chat.appendChild(btn1);
+
+  // 8. CARROSSEL DE AVALIAÇÕES DO FUNIL ORIGINAL
+  const carousel = document.createElement("div");
+  carousel.innerHTML = `
+    <p style="font-size:12px; font-weight:bold; color:#52616b; margin: 15px 0 8px;">💬 AVALIAÇÕES: 5.0 ⭐⭐⭐⭐⭐</p>
+    <div class="fb-carousel">
+      <article class="fb-card">
+        <div class="fb-header"><img class="fb-user-img" src="media/57704ff9b118.jpg" alt="Foto de Rita Limeira" loading="lazy"><div><div class="fb-user-name">Rita Limeira</div><div class="fb-user-location">Porto Alegre, RS</div></div></div>
+        <div class="fb-text">Muito obrigada Rodrigo, ja to fazendo a 8 dias, e minhas dores simplesmente sumiram, to muito feliz por essa vitoria em minha vida😭😭😭😭 obrigada vc foi um anjo.</div>
+      </article>
+            <article class="fb-card">
+        <div class="fb-header"><div><div class="fb-user-name">Paciente com dor na coluna</div><div class="fb-user-location">Depoimento em vídeo</div></div></div>
+        <div class="fb-video-embed"><iframe src="https://www.youtube.com/embed/EjxylXKTM44" title="Depoimento sobre dor na coluna" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+        <div class="fb-text">Depoimento do paciente que estava com Dor na Coluna.</div>
+      </article>
+      <article class="fb-card">
+        <div class="fb-header"><img class="fb-user-img" src="media/b6e7c9718b3f.jpg" alt="Foto de Paulo Nascimento" loading="lazy"><div><div class="fb-user-name">Paulo Nascimento</div><div class="fb-user-location">São Paulo, SP</div></div></div>
+        <div class="fb-text">Tinha artrose no joelho, e eu rompi o meu ligamento do joelho. E eu nunca pensei que uma simples receita poderia me curar, sendo que eu já investi centenas de reais com suplementos e pomadas!</div>
+      </article>
+      <article class="fb-card">
+        <div class="fb-header"><img class="fb-user-img" src="media/f56393b0160a.jpg" alt="Foto de Teresa Ferreira" loading="lazy"><div><div class="fb-user-name">Teresa Ferreira</div><div class="fb-user-location">Belo Horizonte, MG</div></div></div>
+        <div class="fb-text">Eu era conhecida como Maria das Dores pois eu tinha Fibromialgia, Bico de papagaio e tinha dores terríveis nos ombros, mãos e pernas também, e depois que eu completei o Protocolo, fiquei totalmente livre, acordei em uma manhã sem nenhuma dor, estou assim até hoje</div>
+      </article>
+      <article class="fb-card">
+        <div class="fb-header"><img class="fb-user-img" src="media/2db857c452fd.png" alt="Foto de Antônio Costa" loading="lazy"><div><div class="fb-user-name">Antônio Costa</div><div class="fb-user-location">Parnaíba, PI</div></div></div>
+        <div class="fb-text">Já tive que tomar injeção, e tinha cirurgia marcada para minhas costas L1, L2, L3 e L4, estava com medo e antes quis tentar uma última tentativa, que foi o tratamento do Doutor Rodrigo. Eu não acreditei no início, minhas dores simplesmente sumiram de uma semana para a outra, devo toda minha gratidão a equipe do Protocolo, muito obrigado</div>
+      </article>
+      <article class="fb-card">
+        <div class="fb-header"><div><div class="fb-user-name">Depoimento Celso mal andava</div><div class="fb-user-location">Depoimento em vídeo</div></div></div>
+        <div class="fb-video-embed"><iframe src="https://www.youtube.com/embed/t1tRFlwYxB0" title="Depoimento do caminho homem" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+      </article>
+      <article class="fb-card">
+        <div class="fb-header"><div><div class="fb-user-name">Depoimento Ana Dores Articulares</div><div class="fb-user-location">Depoimento em vídeo</div></div></div>
+        <div class="fb-video-embed"><iframe src="https://www.youtube.com/embed/8nv-QpoVG6w" title="Depoimento do caminho mulher" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+      </article>
+    </div>
+  `;
+  chat.appendChild(carousel);
+
+    // 9. BOTÃO CTA 2 (PULSANTE)
+  const btn2 = document.createElement("div");
+  btn2.innerHTML = `
+    <button class="checkout" data-meta-event="V2_BotaoCheckout2" data-checkout-url="https://payt.site/WOC6dVK">
+      ACESSAR MEU PROTOCOLO AGORA →
+    </button>
+  `;
+  chat.appendChild(btn2);
+
+  // 10. BLOCO DE OFERTA FINAL + BOTÃO CTA 3 (PULSANTE)
+  const offer=document.createElement("div");
+  offer.className="offer";
+  offer.innerHTML=`
+    <img src="media/banner-protocolo-9-dias.png" alt="Banner promocional do Protocolo RenovacArticular" loading="lazy" style="display:block;width:100%;height:auto;border-radius:8px;margin-bottom:12px;">
+    
+    <div class="price-box">
+      <div style="font-size:12px; color:#475569; font-weight:bold;">DE R$ 395,00 POR APENAS:</div>
+      <div class="old-price">R$ 395,00</div>
+      <div class="new-price">R$ 37,90</div>
+    </div>
+
+    <button class="checkout" data-meta-event="V2_BotaoCheckout3" data-checkout-url="https://payt.site/WOC6dVK">
+      ACESSAR MEU PROTOCOLO AGORA →
+    </button>
+    <div class="security">
+      🔒 Compra 100% Segura • Acesso Imediato • Garantia de 6 Meses
+    </div>
+  `;
+  chat.appendChild(offer);
+
+  const guaranteeImage=document.createElement("img");
+  guaranteeImage.src="media/seguranca-garantia.png";
+  guaranteeImage.alt="Banner de segurança e garantia";
+  guaranteeImage.style.cssText="display:block;width:100%;height:auto;margin:18px 0;border-radius:9px;";
+  chat.appendChild(guaranteeImage);
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+start();
+</script>
+</body>
+</html>
