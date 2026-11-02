@@ -12,6 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OfertaRouteImport } from './routes/oferta'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as RenovacRouteImport } from './routes/renovac'
+import { Route as RenovacIndexRouteImport } from './routes/renovac.index'
+import { Route as RenovacOfertaRouteImport } from './routes/renovac.oferta'
+import { Route as RenovacPrivacidadeRouteImport } from './routes/renovac.privacidade'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +32,88 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
   path: '/privacidade',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RenovacRoute = RenovacRouteImport.update({
+  id: '/renovac',
+  path: '/renovac',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RenovacIndexRoute = RenovacIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RenovacRoute,
+} as any)
+const RenovacOfertaRoute = RenovacOfertaRouteImport.update({
+  id: '/oferta',
+  path: '/oferta',
+  getParentRoute: () => RenovacRoute,
+} as any)
+const RenovacPrivacidadeRoute = RenovacPrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => RenovacRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/oferta': typeof OfertaRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/renovac': typeof RenovacRouteWithChildren
+  '/renovac/oferta': typeof RenovacOfertaRoute
+  '/renovac/privacidade': typeof RenovacPrivacidadeRoute
+  '/renovac/': typeof RenovacIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/oferta': typeof OfertaRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/renovac/oferta': typeof RenovacOfertaRoute
+  '/renovac/privacidade': typeof RenovacPrivacidadeRoute
+  '/renovac': typeof RenovacIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/oferta': typeof OfertaRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/renovac': typeof RenovacRouteWithChildren
+  '/renovac/oferta': typeof RenovacOfertaRoute
+  '/renovac/privacidade': typeof RenovacPrivacidadeRoute
+  '/renovac/': typeof RenovacIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/oferta' | '/privacidade'
+  fullPaths:
+    | '/'
+    | '/oferta'
+    | '/privacidade'
+    | '/renovac'
+    | '/renovac/oferta'
+    | '/renovac/privacidade'
+    | '/renovac/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/oferta' | '/privacidade'
-  id: '__root__' | '/' | '/oferta' | '/privacidade'
+  to:
+    | '/'
+    | '/oferta'
+    | '/privacidade'
+    | '/renovac/oferta'
+    | '/renovac/privacidade'
+    | '/renovac'
+  id:
+    | '__root__'
+    | '/'
+    | '/oferta'
+    | '/privacidade'
+    | '/renovac'
+    | '/renovac/oferta'
+    | '/renovac/privacidade'
+    | '/renovac/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OfertaRoute: typeof OfertaRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
+  RenovacRoute: typeof RenovacRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -82,13 +139,57 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/renovac': {
+      id: '/renovac'
+      path: '/renovac'
+      fullPath: '/renovac'
+      preLoaderRoute: typeof RenovacRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/renovac/': {
+      id: '/renovac/'
+      path: '/'
+      fullPath: '/renovac/'
+      preLoaderRoute: typeof RenovacIndexRouteImport
+      parentRoute: typeof RenovacRoute
+    }
+    '/renovac/oferta': {
+      id: '/renovac/oferta'
+      path: '/oferta'
+      fullPath: '/renovac/oferta'
+      preLoaderRoute: typeof RenovacOfertaRouteImport
+      parentRoute: typeof RenovacRoute
+    }
+    '/renovac/privacidade': {
+      id: '/renovac/privacidade'
+      path: '/privacidade'
+      fullPath: '/renovac/privacidade'
+      preLoaderRoute: typeof RenovacPrivacidadeRouteImport
+      parentRoute: typeof RenovacRoute
+    }
   }
 }
+
+interface RenovacRouteChildren {
+  RenovacOfertaRoute: typeof RenovacOfertaRoute
+  RenovacPrivacidadeRoute: typeof RenovacPrivacidadeRoute
+  RenovacIndexRoute: typeof RenovacIndexRoute
+}
+
+const RenovacRouteChildren: RenovacRouteChildren = {
+  RenovacOfertaRoute: RenovacOfertaRoute,
+  RenovacPrivacidadeRoute: RenovacPrivacidadeRoute,
+  RenovacIndexRoute: RenovacIndexRoute,
+}
+
+const RenovacRouteWithChildren =
+  RenovacRoute._addFileChildren(RenovacRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OfertaRoute: OfertaRoute,
   PrivacidadeRoute: PrivacidadeRoute,
+  RenovacRoute: RenovacRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
