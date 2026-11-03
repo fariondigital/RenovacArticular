@@ -17,7 +17,7 @@ Não pergunte novamente quando o usuário já especificou a versão. Um caminho 
 - V1 React: páginas em src/routes/; componente principal em src/components/funnel.tsx; conteúdo em src/lib/funnel-content.json; referências de mídia em src/lib/source-assets.ts e src/lib/funnel-media.ts; arquivos estáticos em public/media/.
 - V2 WhatsWeb: página HTML independente em public/whatsweb/index.html; mídia própria junto dela e em public/whatsweb/media/. A URL publicada é /whatsweb/.
 - src/routes/__root.tsx fornece shell, head e inicialização global às rotas React. O HTML da V2 tem seu próprio head.
-- Rotas de produção documentadas no README: V1 começa em /renovac, oferta em /renovac/oferta e privacidade em /renovac/privacidade. Existem também rotas React antigas na raiz. Confira o arquivo de rota antes de alterar links.
+- Rotas de produção da V1 ficam na raiz do domínio: funil em /, oferta em /oferta e privacidade em /privacidade (src/routes/index.tsx, oferta.tsx, privacidade.tsx). Este é o link usado nos anúncios. Qualquer URL em /renovac/* redireciona (301, preservando UTMs) para o equivalente na raiz via src/routes/renovac.tsx; não trate /renovac como rota ativa.
 
 ## Antes de mudar código
 

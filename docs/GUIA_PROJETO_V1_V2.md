@@ -15,10 +15,10 @@ As versões compartilham domínio e Pixel ID, mas não implementação. Corrigir
 
 | Versão | Entrada pública conhecida | Implementação |
 | --- | --- | --- |
-| V1 | https://www.sabedoriadocorpo.com/renovac | Rotas React em src/routes/ e componente Funnel |
+| V1 | https://www.sabedoriadocorpo.com/ | Rotas React em src/routes/ e componente Funnel |
 | V2 / WhatsWeb | https://www.sabedoriadocorpo.com/whatsweb/ | public/whatsweb/index.html e seus assets |
 
-O README também registra /renovac/oferta e /renovac/privacidade. Existem rotas React antigas na raiz, inclusive / e /oferta. Antes de mexer em navegação ou links, confirme a rota pública e o arquivo de rota atual. Não confunda /renovac (V1 React) com /whatsweb/ (V2 estática).
+A V1 usa a raiz: /, /oferta e /privacidade. Endereços em /renovac/* apenas redirecionam (301, com UTMs) para a raiz. Não confunda a V1 (React, raiz) com /whatsweb/ (V2 estática).
 
 ## 3. Estrutura relevante
 
@@ -50,7 +50,7 @@ O README também registra /renovac/oferta e /renovac/privacidade. Existem rotas 
 
 ### Rotas e composição
 
-A rota /renovac apresenta o funil React por meio do componente Funnel. A oferta é uma rota própria em /renovac/oferta; a privacidade está em /renovac/privacidade. Há também uma entrada React antiga em src/routes/index.tsx e uma rota src/routes/oferta.tsx. Não altere uma rota antiga supondo que ela seja a rota pública ativa: confirme a URL usada e leia os arquivos atuais em src/routes/renovac/.
+A rota / (src/routes/index.tsx) apresenta o funil React por meio do componente Funnel. A oferta é src/routes/oferta.tsx (/oferta) e a privacidade, src/routes/privacidade.tsx (/privacidade). src/routes/renovac.tsx redireciona todo /renovac/* para a raiz; os arquivos renovac.*.tsx restantes não são exibidos.
 
 O componente src/components/funnel.tsx coordena telas e estado: seleciona o caminho por gênero, exibe etapas, navega e no fim encaminha à oferta. O conteúdo vem de src/lib/funnel-content.json; funções de mídia ligam itens a arquivos em public/media/. Estado e parâmetros de campanha podem ser mantidos na sessão do navegador. A ordem e quantidade de etapas podem mudar; leia a implementação atual antes de editar.
 
