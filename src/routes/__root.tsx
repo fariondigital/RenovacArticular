@@ -97,19 +97,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+const CLARITY_SNIPPET = `(function(c,l,a,r,i,t,y){
+  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "z7yjpmz1wl");`;
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR">
       <head>
-        <HeadContent>
-          <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "z7yjpmz1wl");
-</script>
-        </HeadContent>
+        <HeadContent />
+        {/* Microsoft Clarity — somente funil V1 (rotas React). A V2 (/whatsweb/) tem seu próprio HTML. */}
+        <script type="text/javascript" dangerouslySetInnerHTML={{ __html: CLARITY_SNIPPET }} />
       </head>
       <body>
         {children}
