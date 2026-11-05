@@ -3,9 +3,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/privacidade")({
   head: () => ({
     meta: [
-      { title: "Política de Privacidade — Dias Mais Felizes" },
-      { name: "description", content: "Política de privacidade e uso de dados de medição de publicidade — Dias Mais Felizes." },
-      { property: "og:title", content: "Política de Privacidade — Dias Mais Felizes" },
+      { title: "Política de Privacidade — RenovacArticular - Protocolo que cura a dor dos brasileiros" },
+      { name: "description", content: "Política de privacidade e uso de dados de medição de publicidade — RenovacArticular - Protocolo que cura a dor dos brasileiros." },
+      { property: "og:title", content: "Política de Privacidade — RenovacArticular - Protocolo que cura a dor dos brasileiros" },
       { property: "og:description", content: "Política de privacidade e uso de dados de medição de publicidade." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

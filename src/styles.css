@@ -540,3 +540,16 @@
 
 /* Garantia 180 dias */
 .source-funnel .clone-1045 { color: var(--emerald-ink); }
+
+/* Oferta: legendas e barras "Antes / Depois" logo abaixo das duas fotos.
+   Grade 2x2 (legendas em cima, barras embaixo): cada barra fica sempre sob a sua foto. */
+.source-funnel .ba-compare { display: grid; grid-template-columns: 1fr 1fr; column-gap: 8px; row-gap: 10px; flex-basis: 100%; width: 100%; max-width: 456px; padding: 4px 4px 20px; box-sizing: border-box; }
+.source-funnel .ba-caption { margin: 0; text-align: center; font-size: 16px; line-height: 22.4px; font-weight: 700; color: var(--source-tone-3); align-self: start; }
+.source-funnel .ba-caption strong { font-weight: 700; }
+.source-funnel .ba-meter { --ba-color: #dc2626; --ba-fill: 22%; min-width: 0; padding: 10px 12px 14px; border: 1px solid var(--source-tone-33); border-radius: 12px; background: #fff; }
+.source-funnel .ba-high { --ba-color: #16a34a; --ba-fill: 90%; }
+.source-funnel .ba-meter-head { display: flex; flex-direction: column; align-items: center; margin: 0 0 10px; text-align: center; font-size: 13px; line-height: 18px; color: var(--source-tone-3); }
+.source-funnel .ba-meter-head strong { font-size: 17px; line-height: 22px; font-weight: 800; color: var(--ba-color); }
+.source-funnel .ba-track { position: relative; height: 10px; border-radius: 999px; background: #e5e7eb; }
+.source-funnel .ba-fill { position: relative; width: var(--ba-fill); height: 100%; border-radius: inherit; background: var(--ba-color); }
+.source-funnel .ba-fill::after { content: ""; position: absolute; top: 50%; right: -9px; width: 18px; height: 18px; box-sizing: border-box; transform: translateY(-50%); border: 4px solid var(--ba-color); border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgb(0 0 0 / 0.25); }
