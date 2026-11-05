@@ -2,6 +2,14 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AudioPlayer } from "./audio-player";
 
+// Simula o áudio tocando de `from` até `to` (timeupdate a cada 0,25 s, como no navegador).
+function play(audio: HTMLAudioElement, from: number, to: number) {
+  for (let t = from; t <= to; t += 0.25) {
+    audio.currentTime = t;
+    fireEvent(audio, new Event("timeupdate"));
+  }
+}
+
 // jsdom não tem PointerEvent: sem isso, clientX/button do toque chegam vazios.
 if (typeof window.PointerEvent === "undefined") {
   class PointerEventPolyfill extends MouseEvent {
@@ -125,5 +133,68 @@ describe("AudioPlayer", () => {
     expect(audio.currentTime).toBe(5);
     fireEvent.keyDown(bars, { key: "ArrowLeft" });
     expect(audio.currentTime).toBe(0);
+  });
+
+  describe("AudioCompleted", () => {
+    function setupTracked(duration = 100) {
+      const onComplete = vi.fn();
+      render(<AudioPlayer src="/media/teste.mp3" onComplete={onComplete} />);
+      const audio = document.querySelector("audio")!;
+      Object.defineProperty(audio, "duration", { configurable: true, value: duration });
+      fireEvent(audio, new Event("loadedmetadata"));
+      return { audio, onComplete };
+    }
+    // Ordem do navegador: seeking → timeupdate → seeked.
+    const seek = (audio: HTMLAudioElement, t: number) => {
+      fireEvent(audio, new Event("seeking"));
+      audio.currentTime = t;
+      fireEvent(audio, new Event("timeupdate"));
+      fireEvent(audio, new Event("seeked"));
+    };
+
+    it("fires when the lead listened to the whole audio", () => {
+      const { audio, onComplete } = setupTracked();
+      play(audio, 0, 100);
+      fireEvent(audio, new Event("ended"));
+      expect(onComplete).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not fire when the lead dragged to the end without listening", () => {
+      const { audio, onComplete } = setupTracked();
+      play(audio, 0, 10);
+      seek(audio, 97);
+      play(audio, 97, 100);
+      fireEvent(audio, new Event("ended"));
+      expect(onComplete).not.toHaveBeenCalled();
+    });
+
+    it("fires when the lead skipped only a small part (80% or more heard)", () => {
+      const { audio, onComplete } = setupTracked();
+      play(audio, 0, 50);
+      seek(audio, 60);
+      play(audio, 60, 100);
+      fireEvent(audio, new Event("ended"));
+      expect(onComplete).toHaveBeenCalledTimes(1);
+    });
+
+    it("still counts when the phone updates less often (big steps without seeking)", () => {
+      const { audio, onComplete } = setupTracked();
+      for (let t = 0; t <= 100; t += 4) { audio.currentTime = t; fireEvent(audio, new Event("timeupdate")); }
+      fireEvent(audio, new Event("ended"));
+      expect(onComplete).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not count the same stretch twice", () => {
+      const { audio, onComplete } = setupTracked();
+      play(audio, 0, 30);
+      seek(audio, 0);
+      play(audio, 0, 30);
+      seek(audio, 0);
+      play(audio, 0, 30);
+      seek(audio, 98);
+      play(audio, 98, 100);
+      fireEvent(audio, new Event("ended"));
+      expect(onComplete).not.toHaveBeenCalled();
+    });
   });
 });

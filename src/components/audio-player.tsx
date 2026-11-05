@@ -7,6 +7,8 @@ const BARS = [10, 18, 26, 16, 30, 22, 12, 24, 28, 14, 20, 32, 18, 10, 26, 16, 22
 export const RATES = [1, 1.5, 2] as const;
 const RATE_KEY = "renovarticular-audio-rate";
 const KEY_STEP = 5; // segundos por toque nas setas do teclado
+// "Áudio concluído" (pixel) só conta se o lead realmente ouviu a maior parte.
+export const COMPLETE_SHARE = 0.8;
 
 function formatTime(seconds: number) {
   if (!Number.isFinite(seconds)) return "0:00";
@@ -32,6 +34,8 @@ export function AudioPlayer({ src, onPlay, onComplete }: { src?: string; onPlay?
   const [current, setCurrent] = useState(0);
   const [rate, setRate] = useState(1);
   const [dragging, setDragging] = useState(false);
+  // Segundos do áudio efetivamente ouvidos (cada segundo conta uma vez, mesmo se repetido).
+  const heardRef = useRef<{ seconds: Set<number>; last: number; jumped: boolean }>({ seconds: new Set(), last: 0, jumped: false });
   // Busca de trecho: o servidor (Cloudflare) sempre entrega o arquivo inteiro e não aceita
   // pedidos parciais, então o navegador não consegue pular para um trecho ainda não baixado.
   // Na primeira vez que o lead arrasta, baixamos o áudio completo uma vez e passamos a tocar
@@ -42,6 +46,15 @@ export function AudioPlayer({ src, onPlay, onComplete }: { src?: string; onPlay?
     const audio = audioRef.current;
     if (!audio) return;
     const onTime = () => {
+      const heard = heardRef.current;
+      const now = audio.currentTime;
+      const step = now - heard.last;
+      // Avanço por busca (arrastar, teclado) não é escuta: o navegador avisa com "seeking".
+      if (!heard.jumped && step > 0) {
+        for (let sec = Math.floor(heard.last); sec < Math.ceil(now); sec++) heard.seconds.add(sec);
+      }
+      heard.last = now;
+      heard.jumped = false;
       if (fullRef.current.swapping || fullRef.current.target !== undefined) return;
       setCurrent(audio.currentTime);
       if (audio.duration) setProgress(audio.currentTime / audio.duration);
@@ -49,18 +62,29 @@ export function AudioPlayer({ src, onPlay, onComplete }: { src?: string; onPlay?
     const onMeta = () => setDuration(audio.duration);
     const onAudioPlay = () => { setPlaying(true); if (!fullRef.current.swapping) onPlay?.(); };
     const onPause = () => { if (!fullRef.current.swapping) setPlaying(false); };
-    const onEnd = () => { setPlaying(false); onComplete?.(); };
+    const onEnd = () => {
+      setPlaying(false);
+      const total = Math.ceil(audio.duration);
+      if (total > 0 && heardRef.current.seconds.size >= total * COMPLETE_SHARE) onComplete?.();
+    };
+    // Depois de uma busca, a escuta recomeça a contar do novo ponto.
+    const onSeeking = () => { heardRef.current.jumped = true; };
+    const onSeeked = () => { heardRef.current.last = audio.currentTime; heardRef.current.jumped = false; };
     audio.addEventListener("timeupdate", onTime);
     audio.addEventListener("loadedmetadata", onMeta);
     audio.addEventListener("play", onAudioPlay);
     audio.addEventListener("pause", onPause);
     audio.addEventListener("ended", onEnd);
+    audio.addEventListener("seeking", onSeeking);
+    audio.addEventListener("seeked", onSeeked);
     return () => {
       audio.removeEventListener("timeupdate", onTime);
       audio.removeEventListener("loadedmetadata", onMeta);
       audio.removeEventListener("play", onAudioPlay);
       audio.removeEventListener("pause", onPause);
       audio.removeEventListener("ended", onEnd);
+      audio.removeEventListener("seeking", onSeeking);
+      audio.removeEventListener("seeked", onSeeked);
     };
   }, [onPlay, onComplete]);
 
