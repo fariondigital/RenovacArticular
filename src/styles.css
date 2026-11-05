@@ -390,31 +390,7 @@
 }
 .wa-play:hover { filter: brightness(1.06); transform: scale(1.05); }
 .wa-body { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.wa-bars {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  height: 34px;
-  cursor: pointer;
-  touch-action: pan-y; /* arrastar na horizontal busca o trecho; na vertical a página rola */
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-.wa-bars:focus-visible { outline: 2px solid var(--emerald); outline-offset: 4px; border-radius: 6px; }
-.wa-knob {
-  position: absolute;
-  top: 50%;
-  width: 14px;
-  height: 14px;
-  margin: -7px 0 0 -7px;
-  border-radius: 50%;
-  background: var(--emerald);
-  box-shadow: 0 1px 4px oklch(0.21 0.006 285.9 / 0.3);
-  pointer-events: none;
-  transition: transform .15s ease;
-}
-.wa-bars.dragging .wa-knob { transform: scale(1.3); }
+.wa-bars { display: flex; align-items: center; gap: 3px; height: 34px; }
 .wa-bars span {
   flex: 1;
   min-width: 2px;

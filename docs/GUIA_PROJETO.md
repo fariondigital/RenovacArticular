@@ -30,7 +30,7 @@ O antigo funil V2 (página estática em /whatsweb/) foi removido. Qualquer link 
         whatsweb.tsx        redireciona /whatsweb/* para /
       components/
         funnel.tsx          apresentação e estado do quiz/oferta
-        audio-player.tsx    player de áudio estilo WhatsApp (1x/1,5x/2x e arrastar)
+        audio-player.tsx    player de áudio estilo WhatsApp (velocidade 1x/1,5x/2x)
         video-facade.tsx    capa do vídeo; o player do YouTube só carrega ao toque
       lib/
         funnel-content.json conteúdo (HTML) de cada tela do funil
@@ -66,9 +66,9 @@ Nas telas com caixinhas, o botão de avançar fica mais claro (aria-disabled) at
 ### Vídeos e áudios
 
 - Vídeos (telas 16, 24 e 27): até o lead tocar, aparece só a capa do YouTube com um botão de play. Ao tocar, o player carrega no mesmo lugar, já tocando, dentro da página. O lead não sai do funil. O evento VideoPageReached continua disparando ao chegar na tela, como antes.
-- Áudios: a pílula ao lado da onda troca a velocidade (1x → 1,5x → 2x). A escolha vale para os próximos áudios da mesma aba. Arrastar ou tocar na onda leva o áudio àquele trecho; as setas do teclado andam 5 s.
-- O Cloudflare entrega os arquivos de public/media sempre inteiros, sem pedidos parciais (Range). Por isso, na primeira vez que o lead arrasta, o player baixa o áudio completo uma vez e passa a tocar essa cópia local. Quem só aperta play não baixa nada a mais.
-- AudioCompleted só dispara se o lead realmente ouviu pelo menos 80% do áudio (cada trecho conta uma vez; trechos pulados com arrastar não contam). Quem arrasta direto para o fim não gera o evento. O limite está em COMPLETE_SHARE, em audio-player.tsx.
+- Áudios: a pílula ao lado da onda troca a velocidade (1x → 1,5x → 2x). A escolha vale para os próximos áudios da mesma aba. Não há arrastar para outro trecho (decisão do funil: o lead ouve o áudio na ordem).
+- Se um dia voltar a ter busca por trecho: o Cloudflare entrega os arquivos de public/media sempre inteiros, sem pedidos parciais (Range), então o navegador não consegue pular para um trecho ainda não baixado (o commit 8e4d8ea tem uma solução).
+- AudioCompleted só dispara se o lead realmente ouviu pelo menos 80% do áudio (cada trecho conta uma vez; pulos de trecho, como os controles da tela de bloqueio do celular, não contam). O limite está em COMPLETE_SHARE, em audio-player.tsx.
 
 ### Conteúdo e mídia
 
