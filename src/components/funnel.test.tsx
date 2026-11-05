@@ -95,7 +95,7 @@ describe("Offer page checkout links", () => {
     expect(links).toHaveLength(5);
     for (const link of links) {
       expect(link.getAttribute("href")).toBe(
-        "https://checkout.payt.com.br/4fb65cf31f381637d0de7f4029c97fea?pixelfb=1671048727876935",
+        "https://checkout.payt.com.br/4fb65cf31f381637d0de7f4029c97fea?pixelfb=1671048727876935&payment=pix",
       );
     }
   });

@@ -13,6 +13,11 @@ describe("tracking params", () => {
     expect(url.searchParams.get("utm_campaign")).toBe("c1");
     expect(url.searchParams.get("foo")).toBeNull();
   });
+  it("keeps payment=pix at the end of the checkout URL, after the UTMs", () => {
+    captureTrackingParams("?utm_source=fb&payment=card");
+    const url = withTrackingParams(`${base}&payment=pix`, readTrackingParams());
+    expect(url).toBe(`${base}&utm_source=fb&payment=pix`);
+  });
   it("keeps params after navigating to a page without them", () => {
     captureTrackingParams("?src=ad1");
     captureTrackingParams("");

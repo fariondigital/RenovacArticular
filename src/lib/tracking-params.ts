@@ -19,5 +19,8 @@ export function readTrackingParams(): Record<string, string> {
 export function withTrackingParams(base: string, params: Record<string, string>): string {
   const url = new URL(base);
   for (const [k, v] of Object.entries(params)) if (k !== "pixelfb") url.searchParams.set(k, v);
+  // payment=pix fica sempre no fim da URL, depois das UTMs.
+  const payment = url.searchParams.get("payment");
+  if (payment) { url.searchParams.delete("payment"); url.searchParams.append("payment", payment); }
   return url.toString();
 }

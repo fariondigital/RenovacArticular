@@ -13,7 +13,7 @@ export { maleSuccessVideo } from "@/lib/funnel-media";
 import { PIXEL_ID, trackFunnelLandingViewed, trackOfferPageReached, trackQuizAudioCompleted, trackQuizAudioStarted, trackQuizCheckoutClick, trackQuizStarted, trackQuizStep, trackQuizVideoPageReached } from "@/lib/meta-pixel";
 import { captureTrackingParams, readTrackingParams, withTrackingParams } from "@/lib/tracking-params";
 
-export const checkoutUrl = `https://checkout.payt.com.br/4fb65cf31f381637d0de7f4029c97fea?pixelfb=${PIXEL_ID}`;
+export const checkoutUrl = `https://checkout.payt.com.br/4fb65cf31f381637d0de7f4029c97fea?pixelfb=${PIXEL_ID}&payment=pix`;
 
 const GENDER_KEY = "renovarticular-gender";
 export const REQUIRED_ANSWER_MESSAGE = "Selecione uma das alternativas acima";
