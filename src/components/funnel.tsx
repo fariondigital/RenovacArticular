@@ -4,6 +4,7 @@ import { domToReact, Element, attributesToProps, type DOMNode, type HTMLReactPar
 import { parseFunnelHtml } from "@/lib/parse-html";
 import { Button } from "@/components/ui/button";
 import { AudioPlayer } from "@/components/audio-player";
+import { VideoFacade } from "@/components/video-facade";
 import { sourceAssets } from "@/lib/source-assets";
 import content from "@/lib/funnel-content.json";
 import { funnelImage, funnelVideo } from "@/lib/funnel-media";
@@ -77,7 +78,8 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
       }
       if (node.name === "iframe") {
         const src = funnelVideo(step, node.attribs["data-clone-node"] || "", currentGender, node.attribs["src"] || "");
-        return <iframe className={node.attribs["class"]} src={src} title={node.attribs["title"] || "Depoimento"} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />;
+        // key={src}: se o vídeo trocar (ex.: caminho masculino), volta a mostrar a capa do novo.
+        return <VideoFacade key={src} className={node.attribs["class"]} src={src} title={node.attribs["title"] || "Depoimento"} />;
       }
       if (node.name === "a") {
         return <span className={node.attribs["class"]}>{children()}</span>;

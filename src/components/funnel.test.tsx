@@ -67,16 +67,24 @@ describe("Male path success video", () => {
     sessionStorage.setItem("renovarticular-gender", "Homem");
     render(<Funnel sales />);
     await waitFor(() => {
-      const iframe = document.querySelector("iframe");
-      expect(iframe?.getAttribute("src")).toBe("https://www.youtube.com/embed/t1tRFlwYxB0");
+      expect(document.querySelector(".yt-facade img")?.getAttribute("src")).toBe("https://i.ytimg.com/vi/t1tRFlwYxB0/maxresdefault.jpg");
     });
+    fireEvent.click(screen.getByRole("button", { name: /Assistir ao vídeo/ }));
+    expect(document.querySelector("iframe")?.getAttribute("src")).toBe("https://www.youtube.com/embed/t1tRFlwYxB0?autoplay=1&playsinline=1&rel=0");
   });
 
   it("keeps the default video on the female path", () => {
     sessionStorage.setItem("renovarticular-gender", "Mulher");
     render(<Funnel sales />);
-    const iframe = document.querySelector("iframe");
-    expect(iframe?.getAttribute("src")).toBe("https://www.youtube.com/embed/8nv-QpoVG6w");
+    expect(document.querySelector(".yt-facade img")?.getAttribute("src")).toBe("https://i.ytimg.com/vi/8nv-QpoVG6w/maxresdefault.jpg");
+    fireEvent.click(screen.getByRole("button", { name: /Assistir ao vídeo/ }));
+    expect(document.querySelector("iframe")?.getAttribute("src")).toBe("https://www.youtube.com/embed/8nv-QpoVG6w?autoplay=1&playsinline=1&rel=0");
+  });
+
+  it("does not load the YouTube player until the lead taps the video", () => {
+    render(<Funnel sales />);
+    expect(document.querySelector("iframe")).toBeNull();
+    expect(document.querySelector(".yt-facade")).not.toBeNull();
   });
 });
 
