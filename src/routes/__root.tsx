@@ -106,11 +106,17 @@ const CLARITY_SNIPPET = `(function(c,l,a,r,i,t,y){
   y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 })(window, document, "clarity", "script", "z7yjpmz1wl");`;
 
+// Telas com menos de 382 px de largura (ex.: Androids de 360 px): o funil foi desenhado
+// para 382 px; em vez de cortar ou rolar para o lado, reduz tudo na proporção exata.
+// Roda no <head>, antes de a página aparecer, para não "pular".
+const FIT_SNIPPET = `(function(){var d=document.documentElement;function f(){var w=window.innerWidth;if(w&&w<382){d.style.setProperty("--funnel-zoom",String(w/382));d.setAttribute("data-fit","")}else if(d.hasAttribute("data-fit")){d.removeAttribute("data-fit")}}f();window.addEventListener("resize",f)})();`;
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: FIT_SNIPPET }} />
         {/* Microsoft Clarity (z7yjpmz1wl) — carrega em todas as páginas do funil. */}
         <script type="text/javascript" dangerouslySetInnerHTML={{ __html: CLARITY_SNIPPET }} />
       </head>

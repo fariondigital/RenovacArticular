@@ -284,6 +284,26 @@
   line-height: 1.3;
 }
 .source-funnel p { line-height: 1.65; }
+/* Textos com largura fixa dentro de caixas com margem interna passavam da borda
+   (deslocados para a direita e criando rolagem lateral). Ficam limitados à caixa. */
+.source-funnel :is(p, h1, h2, h3, h4, h5, h6)[class] { max-width: 100%; }
+/* Celulares com menos de 382 px: ver FIT_SNIPPET em __root.tsx. */
+html[data-fit] .source-funnel, html[data-fit] .funnel-page { zoom: var(--funnel-zoom, 1); }
+
+/* Botão "← Voltar" (canto superior esquerdo de cada etapa) */
+.source-funnel .funnel-back-slot { position: relative; overflow: visible; }
+.source-funnel .funnel-back { position: absolute; left: -6px; top: -11px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 0 14px 0 10px; border: 1px solid var(--source-tone-33); border-radius: 999px; background: #fff; box-shadow: 0 1px 3px rgb(0 0 0 / 0.08); color: var(--source-tone-3); font: 600 15px/1 "Plus Jakarta Sans", "Inter", Arial, sans-serif; white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.source-funnel .funnel-back:active { background: var(--source-tone-46); }
+.source-funnel .funnel-back:focus-visible { outline: 2px solid var(--source-tone-6); outline-offset: 2px; }
+.source-funnel .funnel-back-icon { flex: none; }
+
+/* Nada passa da largura da tela (ex.: o carrossel de conversas da tela 22). */
+.source-funnel { overflow-x: clip; }
+
+/* Tela 26 (análise): as bolinhas das barras de porcentagem ficavam soltas, fora das barras.
+   Agora ficam na ponta de cada barra, centralizadas na altura. */
+.source-funnel .source-step :is(.clone-780, .clone-790, .clone-793, .clone-801, .clone-812) { height: 100%; }
+.source-funnel .source-step :is(.clone-781, .clone-791, .clone-794, .clone-802, .clone-813) { left: auto; right: -10px; top: 50%; margin-top: -10.4px; }
 
 /* Botões principais (avançar / comprar) */
 .source-funnel .source-control[data-action="next"],

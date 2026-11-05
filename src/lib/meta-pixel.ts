@@ -145,7 +145,14 @@ export async function initMetaPixel(): Promise<void> {
   flushPendingQuizEvents();
 }
 
+// Um PageView por endereço em cada carregamento do site: voltar da oferta para o quiz
+// (e avançar de novo) não repete o PageView.
+const viewedPaths = new Set<string>();
+
 export function trackPageView(): void {
   if (!ready) return;
+  const path = window.location.pathname;
+  if (viewedPaths.has(path)) return;
+  viewedPaths.add(path);
   dispatch(["track", "PageView"]);
 }

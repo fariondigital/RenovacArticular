@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { domToReact, Element, attributesToProps, type DOMNode, type HTMLReactParserOptions } from "html-react-parser";
 import { parseFunnelHtml } from "@/lib/parse-html";
 import { Button } from "@/components/ui/button";
@@ -16,10 +16,21 @@ import { captureTrackingParams, readTrackingParams, withTrackingParams } from "@
 export const checkoutUrl = `https://checkout.payt.com.br/4fb65cf31f381637d0de7f4029c97fea?pixelfb=${PIXEL_ID}&payment=pix`;
 
 const GENDER_KEY = "renovarticular-gender";
+// Quem passou pelo quiz e clicou em "Voltar" na oferta volta para a última tela do quiz (26),
+// e não para o começo. Quem entrou direto na oferta volta para o início.
+const QUIZ_DONE_KEY = "renovarticular-quiz-done";
+const RESUME_KEY = "renovarticular-resume-step";
+
+function resumeStep(): number {
+  if (typeof window === "undefined") return 0;
+  try { return window.sessionStorage.getItem(RESUME_KEY) === "26" ? 26 : 0; } catch { return 0; }
+}
+
+const BACK_ARROW = <svg className="funnel-back-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>;
 export const REQUIRED_ANSWER_MESSAGE = "Selecione uma das alternativas acima";
 
 export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; basePath?: "" | "/renovac" }) {
-  const [step, setStep] = useState(sales ? 27 : 0);
+  const [step, setStep] = useState(() => (sales ? 27 : resumeStep()));
   const [answers, setAnswers] = useState<Record<number, string[]>>({});
   const [progress, setProgress] = useState(0);
   const [gender, setGender] = useState<string | null>(null);
@@ -30,8 +41,8 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
   const current = content[step];
   const homeRoute = basePath || "/";
   const offerRoute = basePath ? "/renovac/oferta" : "/oferta";
-  const privacyRoute = basePath ? "/renovac/privacidade" : "/privacidade";
   useEffect(() => {
+    window.sessionStorage.removeItem(RESUME_KEY);
     const saved = window.sessionStorage.getItem(GENDER_KEY);
     if (saved) setGender(saved);
     captureTrackingParams(window.location.search);
@@ -78,11 +89,19 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
   }, [step]);
   if (!current) return null;
   const next = () => {
-    if (step === 26) { void navigate({ to: offerRoute }); return; }
+    if (step === 26) {
+      window.sessionStorage.setItem(QUIZ_DONE_KEY, "1");
+      void navigate({ to: offerRoute });
+      return;
+    }
     setStep((s) => Math.min(26, s + 1));
   };
   const back = () => {
-    if (sales) { void navigate({ to: homeRoute }); return; }
+    if (sales) {
+      if (window.sessionStorage.getItem(QUIZ_DONE_KEY)) window.sessionStorage.setItem(RESUME_KEY, "26");
+      void navigate({ to: homeRoute });
+      return;
+    }
     setStep((s) => Math.max(0, s - 1));
   };
   const options: HTMLReactParserOptions = {
@@ -114,6 +133,13 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
           return <Button variant="source" asChild className={node.attribs["class"]}><a href={checkoutHref} rel="noopener noreferrer" onClick={trackQuizCheckoutClick}>{children()}</a></Button>;
         }
         if (action === "expand") return <div className={node.attribs["class"]}>{children()}</div>;
+        // Voltar: botão "← Voltar" no canto superior esquerdo. O espaço original (a setinha)
+        // continua ocupado para o logo não sair do lugar; o botão fica por cima dele.
+        // Voltar e avançar de novo não repete eventos do Pixel: cada evento do quiz só é
+        // enviado uma vez por sessão (ver meta-pixel.ts).
+        if (action === "back") {
+          return <span className={`${node.attribs["class"]} funnel-back-slot`}><button type="button" className="funnel-back" data-action="back" onClick={back}>{BACK_ARROW}<span>Voltar</span></button></span>;
+        }
         // Avançar em tela de caixinhas sem nada marcado: o botão fica mais claro (aria-disabled),
         // mas continua clicável para poder mostrar o aviso em vermelho logo abaixo dele.
         const locked = action === "next" && current.multiple && !(answers[step]?.length);
@@ -146,9 +172,6 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
   return (
     <div className="source-funnel" data-step={step} data-next-locked={(current.multiple && !answers[step]?.length) || undefined}>
       {domToReact(parseFunnelHtml(current.html), options)}
-      <p style={{ textAlign: "center", marginTop: 24, fontSize: 12, opacity: 0.6 }}>
-        <Link to={privacyRoute} style={{ textDecoration: "underline", color: "inherit" }}>Política de Privacidade</Link>
-      </p>
     </div>
   );
 }

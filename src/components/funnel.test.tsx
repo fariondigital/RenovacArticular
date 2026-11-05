@@ -25,7 +25,7 @@ describe("Original quiz interactions", () => {
     fireEvent.click(screen.getByRole("button", { name: "QUERO APRENDER TAMBÉM !" }));
     fireEvent.click(screen.getByRole("button", { name: /Mulher/ }));
     for (let i = 2; i < 7; i++) {
-      const option = screen.getAllByRole("button").find((b) => b.textContent?.trim());
+      const option = screen.getAllByRole("button").find((b) => b.textContent?.trim() && !b.classList.contains("funnel-back"));
       if (!option) throw new Error(`Missing question ${i}`);
       fireEvent.click(option);
     }
@@ -98,6 +98,51 @@ describe("Offer page checkout links", () => {
         "https://checkout.payt.com.br/4fb65cf31f381637d0de7f4029c97fea?pixelfb=1671048727876935&payment=pix",
       );
     }
+  });
+});
+
+describe("Back button", () => {
+  it("shows \"Voltar\" with an arrow on every step after the first", () => {
+    render(<Funnel />);
+    expect(screen.queryByRole("button", { name: "Voltar" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "QUERO APRENDER TAMBÉM !" }));
+    const back = screen.getByRole("button", { name: "Voltar" });
+    expect(back).toHaveClass("funnel-back");
+    expect(back.querySelector("svg")).not.toBeNull();
+  });
+
+  it("going back and forward does not repeat pixel events", async () => {
+    vi.resetModules(); // registro de eventos do Pixel zerado, como num acesso novo
+    const { Funnel: FreshFunnel } = await import("./funnel");
+    render(<FreshFunnel />);
+    fireEvent.click(screen.getByRole("button", { name: "QUERO APRENDER TAMBÉM !" }));
+    fireEvent.click(screen.getByRole("button", { name: /Mulher/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
+    fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
+    fireEvent.click(screen.getByRole("button", { name: "QUERO APRENDER TAMBÉM !" }));
+    fireEvent.click(screen.getByRole("button", { name: /Homem/ }));
+    const events: string[] = JSON.parse(sessionStorage.getItem("renovarticular-quiz-v1-events") || "[]");
+    expect(events.filter((e) => e === "started")).toHaveLength(1);
+    expect(events.filter((e) => e === "step-1")).toHaveLength(1);
+    expect(events.filter((e) => e === "step-2")).toHaveLength(1);
+  });
+
+  it("from the offer, a lead who did the quiz returns to the last quiz screen", () => {
+    sessionStorage.setItem("renovarticular-quiz-done", "1");
+    render(<Funnel sales />);
+    fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
+    cleanup();
+    render(<Funnel />);
+    expect(document.querySelector(".source-funnel")?.getAttribute("data-step")).toBe("26");
+    expect(sessionStorage.getItem("renovarticular-resume-step")).toBeNull();
+  });
+
+  it("from the offer, a lead who came straight to it goes to the start", () => {
+    render(<Funnel sales />);
+    fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
+    cleanup();
+    render(<Funnel />);
+    expect(document.querySelector(".source-funnel")?.getAttribute("data-step")).toBe("0");
   });
 });
 describe("Next screen images", () => {

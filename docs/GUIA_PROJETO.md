@@ -140,3 +140,11 @@ Antes de publicar, confira diff, rode npm test e npm run build, integre ao branc
 - Caminhos de assets e eventos existentes foram conferidos?
 - npm test e npm run build passaram?
 - A resposta final informa o que mudou e se houve deploy?
+
+## Botão Voltar, Pixel e telas estreitas
+
+- Toda etapa após a primeira tem "← Voltar" no canto superior esquerdo (`funnel-back` em `funnel.tsx`). Na oferta, quem fez o quiz volta para a tela 26; quem entrou direto vai para o início.
+- Voltar e avançar não repete eventos do Pixel: eventos do quiz são enviados uma vez por sessão (`trackQuizEventOnce`) e o PageView uma vez por endereço por carregamento (`trackPageView`).
+- O funil foi desenhado para 382 px de largura. Em telas menores, o script `FIT_SNIPPET` (`__root.tsx`) reduz o funil na proporção exata (`zoom`), sem rolagem lateral. `.source-funnel` tem `overflow-x: clip`.
+- Oferta: barras "Antes / Depois" são `.ba-compare` (styles.css). Tela 26: bolinhas das barras ancoradas na ponta.
+- O link "Política de Privacidade" saiu do rodapé do funil; a página /privacidade continua no ar.
