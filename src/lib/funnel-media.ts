@@ -2,7 +2,7 @@ export const maleSuccessVideo = "https://www.youtube.com/embed/t1tRFlwYxB0";
 export const femaleSuccessVideo = "https://www.youtube.com/embed/8nv-QpoVG6w";
 const maleImages: Record<string, string> = {
   "2:n30": "/media/homem-sintomas.webp",
-  "8:n41": "/media/homem-noticia.png",
+  "8:n41": "/media/homem-noticia.webp",
   "27:n59": "/media/homem-antes.webp",
   "27:n65": "/media/homem-depois.webp",
 };

@@ -100,3 +100,29 @@ describe("Offer page checkout links", () => {
     }
   });
 });
+describe("Next screen images", () => {
+  it("downloads the next screen's images in the background", async () => {
+    const requested: string[] = [];
+    class FakeImage {
+      decoding = "";
+      fetchPriority = "";
+      set src(url: string) { requested.push(url); }
+    }
+    vi.stubGlobal("Image", FakeImage);
+    try {
+      // Módulo novo: os outros testes já pediram essas imagens (e o código não pede duas vezes).
+      vi.resetModules();
+      const { Funnel: FreshFunnel } = await import("./funnel");
+      render(<FreshFunnel />);
+      // Tela 0: já busca as duas fotos da escolha homem/mulher (tela 1).
+      await waitFor(() => expect(requested).toEqual(expect.arrayContaining(["/media/40bac08c6022.webp", "/media/879bb17741aa.webp"])), { timeout: 4000 });
+      // Tela 1 (escolha): ainda sem gênero, busca as duas versões da tela 2.
+      fireEvent.click(screen.getByRole("button", { name: "QUERO APRENDER TAMBÉM !" }));
+      await waitFor(() => expect(requested).toEqual(expect.arrayContaining(["/media/1005f839f3fd.webp", "/media/homem-sintomas.webp"])), { timeout: 4000 });
+      fireEvent.click(screen.getByRole("button", { name: /Homem/ }));
+      expect(new Set(requested).size).toBe(requested.length); // nada é baixado duas vezes
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  }, 15000); // no jsdom as imagens nunca terminam: o código espera os 2,5 s de segurança
+});

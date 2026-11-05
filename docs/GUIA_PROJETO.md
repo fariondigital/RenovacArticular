@@ -70,6 +70,12 @@ Nas telas com caixinhas, o botão de avançar fica mais claro (aria-disabled) at
 - Se um dia voltar a ter busca por trecho: o Cloudflare entrega os arquivos de public/media sempre inteiros, sem pedidos parciais (Range), então o navegador não consegue pular para um trecho ainda não baixado (o commit 8e4d8ea tem uma solução).
 - AudioCompleted só dispara se o lead realmente ouviu pelo menos 80% do áudio (cada trecho conta uma vez; pulos de trecho, como os controles da tela de bloqueio do celular, não contam). O limite está em COMPLETE_SHARE, em audio-player.tsx.
 
+### Imagens
+
+- As imagens de public/media estão em WebP, com 3× a largura em que aparecem na tela (o suficiente para celulares de alta densidade), sem passar do tamanho original. Em 11/2026 o total caiu de 6,5 MB para 1,3 MB, sem diferença visível.
+- Ao adicionar uma imagem nova: converta para WebP (qualidade ~82; ~88 se tiver texto) e redimensione para 3× a largura exibida (máx. 448 px no layout → 1350 px).
+- Pré-carregamento (src/lib/prefetch-images.ts): quando as imagens da tela atual terminam de carregar, o navegador baixa em segundo plano as da próxima tela. Antes da escolha de gênero, baixa as duas versões. O teste prefetch-images.test.ts confere que toda imagem usada pelo funil existe em public/media.
+
 ### Conteúdo e mídia
 
 - Copy e estrutura das perguntas: src/lib/funnel-content.json.

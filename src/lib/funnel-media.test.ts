@@ -4,7 +4,7 @@ import { funnelImage, funnelVideo } from "./funnel-media";
 describe("Audience-specific funnel media", () => {
   it.each([
     [2, "n30", "/media/homem-sintomas.webp"],
-    [8, "n41", "/media/homem-noticia.png"],
+    [8, "n41", "/media/homem-noticia.webp"],
     [27, "n59", "/media/homem-antes.webp"],
     [27, "n65", "/media/homem-depois.webp"],
   ])("changes only the male image at step %s node %s", (step, node, expected) => {

@@ -8,6 +8,7 @@ import { VideoFacade } from "@/components/video-facade";
 import { sourceAssets } from "@/lib/source-assets";
 import content from "@/lib/funnel-content.json";
 import { funnelImage, funnelVideo } from "@/lib/funnel-media";
+import { prefetchImages, stepImageUrls } from "@/lib/prefetch-images";
 export { maleSuccessVideo } from "@/lib/funnel-media";
 import { PIXEL_ID, trackFunnelLandingViewed, trackOfferPageReached, trackQuizAudioCompleted, trackQuizAudioStarted, trackQuizCheckoutClick, trackQuizStarted, trackQuizStep, trackQuizVideoPageReached } from "@/lib/meta-pixel";
 import { captureTrackingParams, readTrackingParams, withTrackingParams } from "@/lib/tracking-params";
@@ -47,6 +48,28 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
     if (sales) trackOfferPageReached();
     if (current?.html.includes("<iframe")) trackQuizVideoPageReached(step);
   }, [step, current?.html, sales]);
+  // Depois que as imagens da tela atual terminam de carregar (ou em até 2,5 s), baixa em
+  // segundo plano as da próxima tela. A tela 25 (processando) não tem imagens: pula para a 26.
+  const chosenGender = answers[1]?.[0] ?? gender;
+  useEffect(() => {
+    let cancelled = false;
+    const nextSteps = step + 1 === 25 ? [25, 26] : [step + 1];
+    const go = () => {
+      if (cancelled) return;
+      cancelled = true;
+      for (const s of nextSteps) prefetchImages(stepImageUrls(s, chosenGender));
+    };
+    const pending = [...document.querySelectorAll<HTMLImageElement>(".source-funnel img")].filter((img) => !img.complete);
+    let left = pending.length;
+    const onDone = () => { if (--left <= 0) go(); };
+    pending.forEach((img) => { img.addEventListener("load", onDone, { once: true }); img.addEventListener("error", onDone, { once: true }); });
+    const timer = window.setTimeout(go, left ? 2500 : 0);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      pending.forEach((img) => { img.removeEventListener("load", onDone); img.removeEventListener("error", onDone); });
+    };
+  }, [step, chosenGender]);
   useEffect(() => {
     if (step !== 25) return;
     const interval = window.setInterval(() => setProgress((p) => Math.min(p + 5, 100)), 150);
@@ -54,7 +77,6 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
     return () => { window.clearInterval(interval); window.clearTimeout(timer); };
   }, [step]);
   if (!current) return null;
-  const currentGender = answers[1]?.[0] ?? gender;
   const next = () => {
     if (step === 26) { void navigate({ to: offerRoute }); return; }
     setStep((s) => Math.min(26, s + 1));
@@ -69,7 +91,7 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
       const children = () => domToReact(node.children as DOMNode[], options);
       const attrs = attributesToProps(node.attribs);
       if (node.name === "img") {
-        const src = funnelImage(step, node.attribs["data-clone-node"] || "", currentGender, sourceAssets[node.attribs["src"] || ""]);
+        const src = funnelImage(step, node.attribs["data-clone-node"] || "", chosenGender, sourceAssets[node.attribs["src"] || ""]);
         return <img {...attrs} src={src} alt={node.attribs["alt"] || "Protocolo RenovArticular"} />;
       }
       if (node.attribs["data-audio"]) {
@@ -77,7 +99,7 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
         return <div className="clone-audio">{audioSrc ? <AudioPlayer src={audioSrc} onPlay={() => trackQuizAudioStarted(step)} onComplete={() => trackQuizAudioCompleted(step)} /> : null}</div>;
       }
       if (node.name === "iframe") {
-        const src = funnelVideo(step, node.attribs["data-clone-node"] || "", currentGender, node.attribs["src"] || "");
+        const src = funnelVideo(step, node.attribs["data-clone-node"] || "", chosenGender, node.attribs["src"] || "");
         // key={src}: se o vídeo trocar (ex.: caminho masculino), volta a mostrar a capa do novo.
         return <VideoFacade key={src} className={node.attribs["class"]} src={src} title={node.attribs["title"] || "Depoimento"} />;
       }
