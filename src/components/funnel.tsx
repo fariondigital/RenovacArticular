@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import parse, { domToReact, Element, attributesToProps, type DOMNode, type HTMLReactParserOptions } from "html-react-parser";
+import { domToReact, Element, attributesToProps, type DOMNode, type HTMLReactParserOptions } from "html-react-parser";
+import { parseFunnelHtml } from "@/lib/parse-html";
 import { Button } from "@/components/ui/button";
 import { AudioPlayer } from "@/components/audio-player";
 import { sourceAssets } from "@/lib/source-assets";
@@ -13,6 +14,7 @@ import { captureTrackingParams, readTrackingParams, withTrackingParams } from "@
 export const checkoutUrl = `https://checkout.payt.com.br/4fb65cf31f381637d0de7f4029c97fea?pixelfb=${PIXEL_ID}`;
 
 const GENDER_KEY = "renovarticular-gender";
+export const REQUIRED_ANSWER_MESSAGE = "Selecione uma das alternativas acima";
 
 export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; basePath?: "" | "/renovac" }) {
   const [step, setStep] = useState(sales ? 27 : 0);
@@ -20,6 +22,8 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
   const [progress, setProgress] = useState(0);
   const [gender, setGender] = useState<string | null>(null);
   const [checkoutHref, setCheckoutHref] = useState(checkoutUrl);
+  // Telas de múltipla escolha: aviso quando o lead tenta avançar sem marcar nenhuma opção.
+  const [showRequired, setShowRequired] = useState(false);
   const navigate = useNavigate();
   const current = content[step];
   const homeRoute = basePath || "/";
@@ -34,6 +38,7 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
   useEffect(() => {
     window.scrollTo(0, 0);
     setProgress(0);
+    setShowRequired(false);
   }, [step]);
   useEffect(() => {
     trackQuizStep(step);
@@ -85,10 +90,15 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
           return <Button variant="source" asChild className={node.attribs["class"]}><a href={checkoutHref} rel="noopener noreferrer" onClick={trackQuizCheckoutClick}>{children()}</a></Button>;
         }
         if (action === "expand") return <div className={node.attribs["class"]}>{children()}</div>;
-        return <Button variant="source" type="button" data-action={action} className={`${node.attribs["class"]} ${selected ? "clone-selected" : ""}`} aria-label={action === "back" ? "Voltar" : undefined} aria-pressed={action === "toggle" ? selected : undefined} disabled={action === "next" && current.multiple && !(answers[step]?.length)} onClick={() => {
+        // Avançar em tela de caixinhas sem nada marcado: o botão fica mais claro (aria-disabled),
+        // mas continua clicável para poder mostrar o aviso em vermelho logo abaixo dele.
+        const locked = action === "next" && current.multiple && !(answers[step]?.length);
+        const button = <Button variant="source" type="button" data-action={action} className={`${node.attribs["class"]} ${selected ? "clone-selected" : ""}`} aria-label={action === "back" ? "Voltar" : undefined} aria-pressed={action === "toggle" ? selected : undefined} aria-disabled={locked || undefined} aria-describedby={locked && showRequired ? "quiz-required-error" : undefined} onClick={() => {
           if (action === "back") { back(); return; }
+          if (locked) { setShowRequired(true); return; }
           if (action === "next" && step === 0) trackQuizStarted();
           if (action === "toggle") {
+            setShowRequired(false);
             setAnswers((old) => ({ ...old, [step]: selected ? (old[step] || []).filter((a) => a !== answer) : [...(old[step] || []), answer] }));
             return;
           }
@@ -101,14 +111,17 @@ export function Funnel({ sales = false, basePath = "" }: { sales?: boolean; base
           }
           next();
         }}>{children()}</Button>;
+        if (action !== "next" || !current.multiple) return button;
+        // Mesma estrutura sempre (botão + espaço do aviso): o botão não é recriado quando o aviso aparece.
+        return <>{button}{locked && showRequired ? <p id="quiz-required-error" className="quiz-required-error" role="alert">{REQUIRED_ANSWER_MESSAGE}</p> : null}</>;
       }
       return undefined;
     },
   };
   if (step === 25) return <main className="funnel-page"><div className="funnel-column processing"><h1 className="quiz-title">Estou analisando as suas respostas e gerando o seu protocolo personalizado.</h1><p className="quiz-description">Montando protocolo personalizado</p><progress className="quiz-progress" max={100} value={progress} /><p className="quiz-description">{progress}%</p><p className="quiz-description">Estamos analisando suas respostas</p></div></main>;
   return (
-    <div className="source-funnel" data-step={step}>
-      {parse(current.html, options)}
+    <div className="source-funnel" data-step={step} data-next-locked={(current.multiple && !answers[step]?.length) || undefined}>
+      {domToReact(parseFunnelHtml(current.html), options)}
       <p style={{ textAlign: "center", marginTop: 24, fontSize: 12, opacity: 0.6 }}>
         <Link to={privacyRoute} style={{ textDecoration: "underline", color: "inherit" }}>Política de Privacidade</Link>
       </p>

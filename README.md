@@ -26,7 +26,7 @@ O Worker usa o nome `renovacarticular`. Para outro nome, altere `name` em `wrang
 
 ## Domínio e rotas públicas
 
-O Worker atende `www.sabedoriadocorpo.com`, configurado como domínio personalizado na Cloudflare. O funil V1 fica na raiz: `/`, oferta em `/oferta` e política de privacidade em `/privacidade`. Endereços antigos em `/renovac/*` redirecionam (301, preservando UTMs) para o equivalente na raiz. O funil V2 fica em `/whatsweb/`.
+O Worker atende `www.sabedoriadocorpo.com`, configurado como domínio personalizado na Cloudflare. O funil V1 fica na raiz: `/`, oferta em `/oferta` e política de privacidade em `/privacidade`. Endereços antigos em `/renovac/*` redirecionam (301, preservando UTMs) para o equivalente na raiz, e o antigo funil V2 em `/whatsweb/` redireciona para `/`.
 
 ## Arquivos de mídia
 

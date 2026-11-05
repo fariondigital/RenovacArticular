@@ -314,6 +314,29 @@
   background-color: transparent;
 }
 
+/* Telas de caixinhas: "Continuar" mais claro até o lead marcar pelo menos uma opção */
+.source-funnel .source-control[data-action="next"][aria-disabled="true"],
+.source-funnel .source-control[data-action="next"][aria-disabled="true"]:hover,
+.source-funnel .source-control[data-action="next"][aria-disabled="true"]:active {
+  background: linear-gradient(135deg, oklch(0.84 0.075 162.5), oklch(0.8 0.07 163.2));
+  box-shadow: none;
+  filter: none;
+  transform: none;
+  cursor: not-allowed;
+}
+/* "Degrau" verde atrás do botão (clone-89) acompanha o tom claro enquanto estiver bloqueado */
+.source-funnel[data-next-locked] .clone-225 > .clone-31 > .clone-89 {
+  background-color: oklch(0.74 0.075 163);
+}
+.source-funnel .quiz-required-error {
+  margin: 10px 0 0;
+  color: oklch(0.577 0.245 27.3);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+}
+
 /* Cartões de opção do quiz */
 .source-funnel .source-control[data-action="toggle"] {
   background: #ffffff;

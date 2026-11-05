@@ -13,9 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as OfertaRouteImport } from './routes/oferta'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as RenovacRouteImport } from './routes/renovac'
+import { Route as WhatswebRouteImport } from './routes/whatsweb'
 import { Route as RenovacIndexRouteImport } from './routes/renovac.index'
 import { Route as RenovacOfertaRouteImport } from './routes/renovac.oferta'
 import { Route as RenovacPrivacidadeRouteImport } from './routes/renovac.privacidade'
+import { Route as WhatswebSplatRouteImport } from './routes/whatsweb.$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -37,6 +39,11 @@ const RenovacRoute = RenovacRouteImport.update({
   path: '/renovac',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WhatswebRoute = WhatswebRouteImport.update({
+  id: '/whatsweb',
+  path: '/whatsweb',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RenovacIndexRoute = RenovacIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -52,22 +59,31 @@ const RenovacPrivacidadeRoute = RenovacPrivacidadeRouteImport.update({
   path: '/privacidade',
   getParentRoute: () => RenovacRoute,
 } as any)
+const WhatswebSplatRoute = WhatswebSplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => WhatswebRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/oferta': typeof OfertaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/renovac': typeof RenovacRouteWithChildren
+  '/whatsweb': typeof WhatswebRouteWithChildren
   '/renovac/oferta': typeof RenovacOfertaRoute
   '/renovac/privacidade': typeof RenovacPrivacidadeRoute
+  '/whatsweb/$': typeof WhatswebSplatRoute
   '/renovac/': typeof RenovacIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/oferta': typeof OfertaRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/whatsweb': typeof WhatswebRouteWithChildren
   '/renovac/oferta': typeof RenovacOfertaRoute
   '/renovac/privacidade': typeof RenovacPrivacidadeRoute
+  '/whatsweb/$': typeof WhatswebSplatRoute
   '/renovac': typeof RenovacIndexRoute
 }
 export interface FileRoutesById {
@@ -76,8 +92,10 @@ export interface FileRoutesById {
   '/oferta': typeof OfertaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/renovac': typeof RenovacRouteWithChildren
+  '/whatsweb': typeof WhatswebRouteWithChildren
   '/renovac/oferta': typeof RenovacOfertaRoute
   '/renovac/privacidade': typeof RenovacPrivacidadeRoute
+  '/whatsweb/$': typeof WhatswebSplatRoute
   '/renovac/': typeof RenovacIndexRoute
 }
 export interface FileRouteTypes {
@@ -87,16 +105,20 @@ export interface FileRouteTypes {
     | '/oferta'
     | '/privacidade'
     | '/renovac'
+    | '/whatsweb'
     | '/renovac/oferta'
     | '/renovac/privacidade'
+    | '/whatsweb/$'
     | '/renovac/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/oferta'
     | '/privacidade'
+    | '/whatsweb'
     | '/renovac/oferta'
     | '/renovac/privacidade'
+    | '/whatsweb/$'
     | '/renovac'
   id:
     | '__root__'
@@ -104,8 +126,10 @@ export interface FileRouteTypes {
     | '/oferta'
     | '/privacidade'
     | '/renovac'
+    | '/whatsweb'
     | '/renovac/oferta'
     | '/renovac/privacidade'
+    | '/whatsweb/$'
     | '/renovac/'
   fileRoutesById: FileRoutesById
 }
@@ -114,6 +138,7 @@ export interface RootRouteChildren {
   OfertaRoute: typeof OfertaRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   RenovacRoute: typeof RenovacRouteWithChildren
+  WhatswebRoute: typeof WhatswebRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -146,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RenovacRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/whatsweb': {
+      id: '/whatsweb'
+      path: '/whatsweb'
+      fullPath: '/whatsweb'
+      preLoaderRoute: typeof WhatswebRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/renovac/': {
       id: '/renovac/'
       path: '/'
@@ -167,6 +199,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RenovacPrivacidadeRouteImport
       parentRoute: typeof RenovacRoute
     }
+    '/whatsweb/$': {
+      id: '/whatsweb/$'
+      path: '/$'
+      fullPath: '/whatsweb/$'
+      preLoaderRoute: typeof WhatswebSplatRouteImport
+      parentRoute: typeof WhatswebRoute
+    }
   }
 }
 
@@ -185,11 +224,24 @@ const RenovacRouteChildren: RenovacRouteChildren = {
 const RenovacRouteWithChildren =
   RenovacRoute._addFileChildren(RenovacRouteChildren)
 
+interface WhatswebRouteChildren {
+  WhatswebSplatRoute: typeof WhatswebSplatRoute
+}
+
+const WhatswebRouteChildren: WhatswebRouteChildren = {
+  WhatswebSplatRoute: WhatswebSplatRoute,
+}
+
+const WhatswebRouteWithChildren = WhatswebRoute._addFileChildren(
+  WhatswebRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OfertaRoute: OfertaRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   RenovacRoute: RenovacRouteWithChildren,
+  WhatswebRoute: WhatswebRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

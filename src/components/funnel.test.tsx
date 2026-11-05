@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { Funnel, maleSuccessVideo } from "./funnel";
+import { Funnel, maleSuccessVideo, REQUIRED_ANSWER_MESSAGE } from "./funnel";
 
 vi.mock("@tanstack/react-router", () => ({
   useNavigate: () => vi.fn(),
@@ -30,12 +30,28 @@ describe("Original quiz interactions", () => {
       fireEvent.click(option);
     }
     const next = screen.getByRole("button", { name: "Continuar" });
-    expect(next).toBeDisabled();
+    // Sem nada marcado: botão claro (aria-disabled), sem aviso ainda.
+    expect(next).toHaveAttribute("aria-disabled", "true");
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    // Tentar avançar sem marcar mostra o aviso e não sai da tela.
+    fireEvent.click(next);
+    expect(screen.getByRole("alert")).toHaveTextContent(REQUIRED_ANSWER_MESSAGE);
+    expect(screen.getByRole("button", { name: "Artrose" })).toBeInTheDocument();
+    // Marcar uma opção libera o botão e some com o aviso.
     fireEvent.click(screen.getByRole("button", { name: "Artrose" }));
-    expect(next).toBeEnabled();
+    expect(next).not.toHaveAttribute("aria-disabled");
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Artrite" }));
     expect(screen.getByRole("button", { name: "Artrose" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "Artrite" })).toHaveAttribute("aria-pressed", "true");
+    // Desmarcar tudo volta a bloquear.
+    fireEvent.click(screen.getByRole("button", { name: "Artrose" }));
+    fireEvent.click(screen.getByRole("button", { name: "Artrite" }));
+    expect(next).toHaveAttribute("aria-disabled", "true");
+    // Com opção marcada, avança para a próxima tela.
+    fireEvent.click(screen.getByRole("button", { name: "Artrose" }));
+    fireEvent.click(next);
+    expect(screen.queryByRole("button", { name: "Artrose" })).not.toBeInTheDocument();
   });
 });
 
