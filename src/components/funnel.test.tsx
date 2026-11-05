@@ -70,7 +70,7 @@ describe("Male path success video", () => {
       expect(document.querySelector(".yt-facade img")?.getAttribute("src")).toBe("https://i.ytimg.com/vi/t1tRFlwYxB0/maxresdefault.jpg");
     });
     fireEvent.click(screen.getByRole("button", { name: /Assistir ao vídeo/ }));
-    expect(document.querySelector("iframe")?.getAttribute("src")).toBe("https://www.youtube.com/embed/t1tRFlwYxB0?autoplay=1&playsinline=1&rel=0");
+    expect(document.querySelector("iframe")?.getAttribute("src")).toContain("https://www.youtube.com/embed/t1tRFlwYxB0?autoplay=1&playsinline=1&rel=0&enablejsapi=1");
   });
 
   it("keeps the default video on the female path", () => {
@@ -78,7 +78,7 @@ describe("Male path success video", () => {
     render(<Funnel sales />);
     expect(document.querySelector(".yt-facade img")?.getAttribute("src")).toBe("https://i.ytimg.com/vi/8nv-QpoVG6w/maxresdefault.jpg");
     fireEvent.click(screen.getByRole("button", { name: /Assistir ao vídeo/ }));
-    expect(document.querySelector("iframe")?.getAttribute("src")).toBe("https://www.youtube.com/embed/8nv-QpoVG6w?autoplay=1&playsinline=1&rel=0");
+    expect(document.querySelector("iframe")?.getAttribute("src")).toContain("https://www.youtube.com/embed/8nv-QpoVG6w?autoplay=1&playsinline=1&rel=0&enablejsapi=1");
   });
 
   it("does not load the YouTube player until the lead taps the video", () => {

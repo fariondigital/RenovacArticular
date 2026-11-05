@@ -65,7 +65,7 @@ Nas telas com caixinhas, o botão de avançar fica mais claro (aria-disabled) at
 
 ### Vídeos e áudios
 
-- Vídeos (telas 16, 24 e 27): até o lead tocar, aparece só a capa do YouTube com um botão de play. Ao tocar, o player carrega no mesmo lugar, já tocando, dentro da página. O lead não sai do funil. O evento VideoPageReached continua disparando ao chegar na tela, como antes.
+- Vídeos (telas 16, 24 e 27): até o lead tocar, aparece só a capa do YouTube com um botão de play. Ao tocar, o player carrega no mesmo lugar, já tocando, dentro da página. O lead não sai do funil. O evento VideoPageReached continua disparando ao chegar na tela, como antes. Enquanto o player carrega, a capa continua na tela, escurecida, com “Carregando vídeo…”, e só sai quando o YouTube avisa que o vídeo começou. Se o celular bloquear o início automático, ou se o YouTube não avisar, a capa sai em poucos segundos e o lead toca no play do próprio YouTube. Nunca fica carregando mais de 12 s.
 - Áudios: a pílula ao lado da onda troca a velocidade (1x → 1,5x → 2x). A escolha vale para os próximos áudios da mesma aba. Não há arrastar para outro trecho (decisão do funil: o lead ouve o áudio na ordem).
 - Se um dia voltar a ter busca por trecho: o Cloudflare entrega os arquivos de public/media sempre inteiros, sem pedidos parciais (Range), então o navegador não consegue pular para um trecho ainda não baixado (o commit 8e4d8ea tem uma solução).
 - AudioCompleted só dispara se o lead realmente ouviu pelo menos 80% do áudio (cada trecho conta uma vez; pulos de trecho, como os controles da tela de bloqueio do celular, não contam). O limite está em COMPLETE_SHARE, em audio-player.tsx.
